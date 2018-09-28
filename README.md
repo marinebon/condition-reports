@@ -6,9 +6,9 @@ Within the "pages" directory is a markdown (`.md`) file addressing each of the S
 These sections (and their IMaRS developer usertag) are:
 
 * Drivers and Pressures (NONE)
-* Water Quality (@7yl4r)
-* Habitat Resources (@mjm8)
-* Living Resources (@emqh)
+* Water Quality
+* Habitat Resources 
+* Living Resources 
 * Maritime Archaeological Resources (NONE)
 
 
