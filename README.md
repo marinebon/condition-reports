@@ -14,3 +14,4 @@ These sections (and their IMaRS developer usertag) are:
 
 ## Relevant links:
 * [2018 Condition Report Guidance](https://github.com/USF-IMARS/condition-reports/blob/master/2018-condition-report-guidance.pdf)
+* [markdown cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
