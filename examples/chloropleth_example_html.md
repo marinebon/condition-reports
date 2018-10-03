@@ -1,4 +1,5 @@
 ---
+layout: none	
 title: Choropleth Tutorial
 css: "#map {
 			width: 800px;
