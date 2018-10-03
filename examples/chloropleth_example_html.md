@@ -1,5 +1,4 @@
 ---
-layout: tutorial_frame
 title: Choropleth Tutorial
 css: "#map {
 			width: 800px;
@@ -32,6 +31,8 @@ css: "#map {
 			opacity: 0.7;
 		}"
 ---
+<div id='map'></div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.4/leaflet.js"></script>  
 <script type="text/javascript" src="us-states.js"></script>
 <script type="text/javascript">
