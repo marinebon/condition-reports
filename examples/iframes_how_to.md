@@ -17,7 +17,7 @@ This example from leaflet.
 
 ## use jekyll (liquid) `include` or `include_relative`
  
-{% include_relative frame.html url="chloropleth_example_html.html" width=816 height=516 %}
+{% include_relative iframe_template.html url="chloropleth_example_html.html" width=816 height=516 %}
 
 ## can do the same with external pages
 
