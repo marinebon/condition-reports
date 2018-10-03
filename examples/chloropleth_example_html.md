@@ -32,7 +32,7 @@ css: "#map {
 			opacity: 0.7;
 		}"
 ---
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.4/leaflet.js"></script>  
 <script type="text/javascript" src="us-states.js"></script>
 <script type="text/javascript">
 
