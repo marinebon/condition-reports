@@ -35,6 +35,8 @@ css: "#map {
 <div id='map'></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.4/leaflet.js"></script>  
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.4/leaflet.css"/>
+
 <script type="text/javascript" src="us-states.js"></script>
 <script type="text/javascript">
 
