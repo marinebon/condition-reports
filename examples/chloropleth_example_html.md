@@ -30,8 +30,15 @@ css: "#map {
 			float: left;
 			margin-right: 8px;
 			opacity: 0.7;
-		}"
+		}
+	html, body {
+		height: 100%;
+		margin: 0;
+	}
+"
 ---
+
+
 <div id='map'></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.4/leaflet.js"></script>  
