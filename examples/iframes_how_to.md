@@ -38,10 +38,8 @@ This example from leaflet.
 </iframe>
 
 # png image from erddap in iframe:
-<iframe src='http://imars-physalis.marine.usf.edu:8080/erddap/tabledap/cwwcNDBCMet.transparentPng?longitude,latitude,wd&time%3E=2018-09-28T00%3A00%3A00Z&time%3C=2018-10-05T00%3A00%3A00Z&longitude%3E=-156&longitude%3C=-50&latitude%3E=-16&latitude%3C=90&.draw=markers&.marker=5%7C5&.color=0x000000&.colorBar=%7C%7C%7C%7C%7C&.bgColor=0xffccccff'
-	width='816'
-	height='516'>
-</iframe>
+
+<iframe src='https://coastwatch.pfeg.noaa.gov/erddap/tabledap/cwwcNDBCMet.png?longitude%2Clatitude%2Cwd&time%3E=2018-09-28T00%3A00%3A00Z&time%3C=2018-10-05T00%3A00%3A00Z&longitude%3E=-156&longitude%3C=-50&latitude%3E=-16&latitude%3C=90&.draw=markers&.marker=5%7C5&.color=0x000000&.colorBar=%7C%7C%7C%7C%7C&.land=under&.bgColor=0xffccccff'></iframe>
 
 # png image markdown
 
