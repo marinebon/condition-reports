@@ -7,6 +7,11 @@ This example from leaflet.
 * [original source md](https://github.com/Leaflet/Leaflet/blob/master/docs/examples/choropleth/index.md)
 
 
+
+# grafana in an iframe
+<iframe src="http://grafana.marine.usf.edu:3000/dashboard-solo/db/fl_keys_dash?orgId=2&panelId=3&from=1475611938029&to=1538683938030&var-product=chlor_a&var-roi=fgbnms&var-weeks_ago=4&var-weeks_ago=3&var-weeks_ago=2&var-weeks_ago=1&var-weeks_ago=0&var-area=carbon&var-station=08030500&var-station=08041780" width="450" height="200" frameborder="0"></iframe>
+
+
 # use raw html to create iframe
 
 <iframe src='https://github.com/USF-IMARS/condition-reports/blob/master/data/imars-logo.gif'
@@ -19,7 +24,7 @@ This example from leaflet.
  
 {% include_relative iframe_template.html url="../data/" width=816 height=516 %}
 
-# 
+
 <iframe src='https://leafletjs.com/examples/choropleth/example.html'
 	width='816'
 	height='516'>
