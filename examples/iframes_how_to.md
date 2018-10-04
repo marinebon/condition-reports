@@ -9,7 +9,7 @@ This example from leaflet.
 
 # use raw html to create iframe
 
-<iframe src='https://github.com/USF-IMARS/condition-reports'
+<iframe src='https://github.com/USF-IMARS/condition-reports/blob/master/data/imars-logo.gif'
 	width='100%'
 	height='516'>
 </iframe>
@@ -40,6 +40,14 @@ This example from leaflet.
 
 # png image markdown
 
-![the hover text](http://imars-physalis.marine.usf.edu:8080/erddap/tabledap/cwwcNDBCMet.transparentPng?longitude,latitude,wd&time%3E=2018-09-28T00%3A00%3A00Z&time%3C=2018-10-05T00%3A00%3A00Z&longitude%3E=-156&longitude%3C=-50&latitude%3E=-16&latitude%3C=90&.draw=markers&.marker=5%7C5&.color=0x000000&.colorBar=%7C%7C%7C%7C%7C&.bgColor=0xffccccff)
+![the hover text]( http://imars-physalis.marine.usf.edu:8080/erddap/tabledap/cwwcNDBCMet.transparentPng?longitude,latitude,wd&time%3E=2018-09-28T00%3A00%3A00Z&time%3C=2018-10-05T00%3A00%3A00Z&longitude%3E=-156&longitude%3C=-50&latitude%3E=-16&latitude%3C=90&.draw=markers&.marker=5%7C5&.color=0x000000&.colorBar=%7C%7C%7C%7C%7C&.bgColor=0xffccccff )
 
-![other hover text](/data/imars-logo.gif)
+![other hover text]( /data/imars-logo.gif )
+
+![other other hover](https://github.com/USF-IMARS/condition-reports/blob/master/data/imars-logo.gif)
+
+# xss err
+<iframe src='https://github.com/USF-IMARS/condition-reports'
+	width='100%'
+	height='516'>
+</iframe>
