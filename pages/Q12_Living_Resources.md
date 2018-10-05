@@ -1,4 +1,4 @@
-# LIVING RESOURCES CATEGORY -- Keystone and Foundation Species -- FISH
+## LIVING RESOURCES CATEGORY -- Keystone and Foundation Species -- FISH
 
 ### Question 12 What is the status of keystone and foundation species and how is it changing?
 
@@ -9,6 +9,8 @@ large number of other species in the ecosystem depends. “Foundation” species
 
 These are typically dominant biomass producers in an ecosystem and strongly influence the abundance and biomass of many other species.
 Examplesinclude krill and other zooplankton, kelp, forage fish such asrockfish, anchovy, sardines and coral. Foundation species exhibit similar control over ecosystems as keystone species, but their high abundance distinguishesthem.  Changes in either keystone or foundation species may transform ecosystem structure through disappearances of or dramatic increasesin the abundance of dependentspecies. Not only do the abundances of keystone and foundation species affect ecosystem integrity, but measures of condition can also be important to  determining the likelihood that these species will persist and continue to provide vital ecosystem functions. Measures of condition may include growth rates, fecundity, recruitment, age-specific survival, contaminant loads, pathologies (e.g., disease incidence, tumors, deformities), the presence and abundance of critical symbionts or parasite loads.
+
+---------
 
 ### CARIBBEAN SPINY LOBSTETR (Panulirus argus) 
 
