@@ -1,6 +1,6 @@
 ## Question 8
 
-Have recent changes in climate altered water conditions and how are they changing?
+**Have recent changes in climate altered water conditions and how are they changing?**
 
 Potential data sources:
 1. NDBC buoys
