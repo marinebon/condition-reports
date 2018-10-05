@@ -1,5 +1,5 @@
 ## LIVING RESOURCES CATEGORY
-### Keystone and Foundation Species -- FISH
+### Keystone and Foundation Species
 
 ### Question 12 What is the status of keystone and foundation species and how is it changing?
 
