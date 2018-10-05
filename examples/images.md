@@ -1,14 +1,14 @@
 # images in html
 
-<img src="https://github.com/USF-IMARS/condition-reports/blob/master/data/imars-logo.gif?raw=true"/>
+<img src="https://github.com/USF-IMARS/condition-reports/blob/master/assets/images/imars-logo.gif?raw=true">
 
 # images in markdown
 
 ## full url
-![long full url]( https://github.com/USF-IMARS/condition-reports/blob/master/data/imars-logo.gif?raw=true )
+![long full url]( https://github.com/USF-IMARS/condition-reports/blob/master/assets/images/imars-logo.gif?raw=true )
 
 ## shorter local url
-![short local url]( /condition-reports/data/imars-logo.gif )
+![short local url]( /condition-reports/assets/images/imars-logo.gif?raw=true )
 
 # "Dynamic" images from a data API
 ## ERDDAP
