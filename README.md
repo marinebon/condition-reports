@@ -39,3 +39,11 @@ interactive graphs/plots/maps:
 interactive code demonstration notebooks:
 * python jupyter notebooks : [GIS example](http://nbviewer.jupyter.org/github/mqlaql/geospatial-data/blob/master/Geospatial-Data-with-Python.ipynb)
 * R-markdown : [example dashboard](https://beta.rstudioconnect.com/jjallaire/htmlwidgets-highcharter/htmlwidgets-highcharter.html) 
+
+## The CR Process in Theory
+
+1. (in development) automatically pull together existing indicator data
+2. expert workshops to identify publications/studies relevant to CRs
+
+* indicators are constantly rotating
+* lots of customization for each sanctuary
