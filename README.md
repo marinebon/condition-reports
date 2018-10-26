@@ -20,7 +20,7 @@ These sections (and their IMaRS developer usertag) are:
 
 Every link below is powered by the jekyll stack.
 All demonstrated functionality should be reproducible.
-A few groups below are included to demonstrate different aspects of the stack.
+A www groups below are included to demonstrate different aspects of the stack.
 
 overall website design:
 * [feeling responsive](https://github.com/Phlow/feeling-responsive)
