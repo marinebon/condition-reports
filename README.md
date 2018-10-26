@@ -28,7 +28,7 @@ overall website design:
 * [leaflet](https://leafletjs.com/)
 
 simplicity:
-* this repo is as simple as it gets, complexity is not yet added.
+* this repo is about as simple as it gets, complexity is not yet added.
 
 interactive graphs/plots/maps:
 * [using plotly](https://davistownsend.github.io/blog/PlotlyBloggingTutorial/)
