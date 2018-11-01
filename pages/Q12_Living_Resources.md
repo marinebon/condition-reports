@@ -20,6 +20,11 @@ Measures of condition may include growth rates, fecundity, recruitment, age-spec
 ---------
 ### KEY SPECIES
 The key species or taxa in the sanctuary selected for use in this section of the report include stony corals, seagrasses, queen conch, Caribbean spiny lobster, long-spined sea urchin, the snapper-grouper complex and sea turtles. These species are important for their ecological roles, and long-term datasets are available for assessing changes for these species.
+[2010 Reef Visual Census data from the GCOOS ERDDAP server](http://gcoos4.tamu.edu:8080/erddap/tabledap/fk2010.graph?longitude%2Clatitude%2Cdepth&time%3E=2010-11-12T00%3A00%3A00Z&time%3C=2010-11-19T00%3A00%3A00Z&.draw=markers&.marker=1%7C14&.color=0xCCCCCC&.colorBar=Rainbow%7C%7CLinear%7C0%7C30%7C&.land=over&.bgColor=0xffccccff) is used to assess the status of key species. 
+
+
+![location & depths](http://gcoos4.tamu.edu:8080/erddap/tabledap/fk2010.htmlTable?longitude,latitude,depth&time%3E=2010-11-12T00%3A00%3A00Z&time%3C=2010-11-19T00%3A00%3A00Z&.draw=markers&.marker=1%7C14&.color=0xCCCCCC&.colorBar=Rainbow%7C%7CLinear%7C0%7C30%7C&.land=over&.bgColor=0xffccccff)
+*Locations & Depths of data included in this analysis.*
 
 ### Stony Corals
 
