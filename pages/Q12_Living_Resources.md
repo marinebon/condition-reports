@@ -25,12 +25,11 @@ The key species or taxa in the sanctuary selected for use in this section of the
 
 
 
-
-### Seagrasses 
-
+### SEAGRASSES 
 
 
-### Queen Conch
+
+### QUEEN CONCH 
 
 
 ### CARIBBEAN SPINY LOBSTER (Panulirus argus) 
