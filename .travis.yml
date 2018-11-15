@@ -9,6 +9,8 @@ git:
   depth: 3
 script:
 - Rscript -e 'rmarkdown::render_site()'
+- cp _site.yml pages/_site.yml
+- Rscript -e 'rmarkdown::render_site("pages")'
 deploy:
   provider: pages
   skip-cleanup: true
