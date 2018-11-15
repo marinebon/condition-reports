@@ -8,9 +8,13 @@ cache:
 git:
   depth: 3
 script:
+- echo === BUILD ROOT
 - Rscript -e 'rmarkdown::render_site()'
+- echo === BUILD PAGES DIR
+- rm -rf _site/pages
 - cp _site.yml pages/_site.yml
 - Rscript -e 'rmarkdown::render_site("pages")'
+- mv pages/_site _site/pages
 deploy:
   provider: pages
   skip-cleanup: true
