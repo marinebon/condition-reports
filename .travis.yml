@@ -17,7 +17,9 @@ deploy:
   github-token: $GH_TOKEN
   keep-history: true
   on:
-    branch: gh-pages
+    branch: master
+  target-branch: gh-pages
+  local-dir: _site
 notifications:
   email:
     recipients:
