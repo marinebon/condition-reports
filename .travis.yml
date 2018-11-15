@@ -17,7 +17,7 @@ script:
 - cp _site.yml pages/_site.yml
 - Rscript -e 'rmarkdown::render_site("pages")'
 - echo === PUSHING TO GITHUB
-- find ./ -not -name '*.html' | xargs git add
+- find ./ -type f -not -name '*.html' -not -path "./.git/*" | xargs git add
 - git commit -m "travis-ci.org Rmd render [ci skip]"
 - git push --force https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git HEAD:gh-pages
 
