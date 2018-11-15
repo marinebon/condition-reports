@@ -3,3 +3,6 @@
 theme: jekyll-theme-cayman
 
 title: 'SCRQs'
+
+navbar-links:
+  SCRQs: "pages/index"
