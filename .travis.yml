@@ -1,3 +1,4 @@
+# .travis.yml sets up Travis CI to build & deploy the site.
 language: r
 sudo: false
 cache:

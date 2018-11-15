@@ -1,3 +1,5 @@
+# _site.yml configures rmarkdown:render_site behavior
+# which converts .Rmd files to .md
 name: Webinized Condition Report
 output_dir: "."
 include: ["*.Rmd"]

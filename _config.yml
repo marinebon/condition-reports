@@ -1,3 +1,5 @@
+# _config.yml contains settings for the jekyll build
+# which converts .md files to .html
 theme: jekyll-theme-cayman
 
 title: 'SCRQs'
