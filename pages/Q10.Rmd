@@ -1,4 +1,4 @@
-Question 10: What is the integrity of major habitat types and how is it changing?
+# Q10: What is the integrity of major habitat types and how is it changing?
 
 We can put R chunks here.
 Example R plot:
