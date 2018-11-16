@@ -8,7 +8,7 @@ cache:
 git:
   depth: 3
 before_install:
-  - sudo apt-get install -y r-cran-ncdf4
+  - sudo apt-get install -y r-cran-ncdf4 libudunits2-dev
 after_install:
   - Rscript -e 'devtools::install_github("jeremiaheb/rvc")'
   - Rscript -e 'devtools::install_github("timelyportfolio/d3treeR")'
