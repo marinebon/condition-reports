@@ -9,6 +9,7 @@ git:
   depth: 3
 before_install:
   - sudo apt-get install -y r-cran-ncdf4
+after_install:
   - Rscript -e 'devtools::install_github("jeremiaheb/rvc")'
   - Rscript -e 'devtools::install_github("timelyportfolio/d3treeR")'
 before_script:
