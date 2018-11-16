@@ -8,6 +8,12 @@ Potential data sources:
 
 Chunk taken from [infographiq plotter](https://github.com/marinebon/infographiq/blob/master/R/plot.R)
 ```{r}
+library(tidyverse)
+library(dygraphs) # devtools::install_github("rstudio/dygraphs")
+library(xts)
+library(lubridate)
+library(futile.logger)
+
 csv_tv = "http://oceanview.pfeg.noaa.gov/erddap/tabledap/cciea_MM_pup_count.csv?time,mean_growth_rate"
 d = read_csv(csv_tv)
 
