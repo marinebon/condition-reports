@@ -153,19 +153,19 @@ dev.off()
 #with scale
 #pdf("functional_diversity/functional_dendrogram.pdf", width = 8.5, height = 70)
 #par(mar=c(0,0,0,0)) #number of lines of margins for bottom, left, top, right
-par(pin=c(4.5,65))         #plot dimensions (width, height)
+#par(pin=c(4.5,65))         #plot dimensions (width, height)
 plot(func_dist_common, horiz=TRUE, main = "Functional Dendrogram", cex = 1, cex.main = 2, cex.lab = 1)
 dev.off()
 
 tiff("functional_diversity/functional_dendrogram.tiff", width = 8.5, height = 70)
 #par(mar=c(0,0,0,0)) #number of lines of margins for bottom, left, top, right
-par(pin=c(4.5,65))         #plot dimensions (width, height)
+#par(pin=c(4.5,65))         #plot dimensions (width, height)
 plot(func_dist_common, horiz=TRUE, main = "Functional Dendrogram", cex = 1, cex.main = 2, cex.lab = 1)
 dev.off()
 
 #with scale
 tiff("fd.tiff", width = 8.5, height = 70, units = "in", res = 300)
-par(pin=c(3.5,65))         #plot dimensions (width, height)
+#par(pin=c(3.5,65))         #plot dimensions (width, height)
 plot(func_dist_common, horiz=TRUE, main = "Functional Dendrogram", cex = 1, cex.main = 2, cex.lab = 1)
 dev.off()
 
@@ -173,7 +173,7 @@ dev.off()
 #pdf("functional_diversity/functional_dendrogram.pdf", width = 7, height = 80)
 par(mfrow=c(1,1))         #nc-by-nr array
 par(mar=c(2,1,0,2))  #number of lines of margins for bottom, left, top, right
-par(pin=c(5,70))    #plot dimensions (width, height)
+#par(pin=c(5,70))    #plot dimensions (width, height)
 plot(func.dist, horiz=TRUE, main = "Functional Dendrogram", cex = 1, cex.main = 1.5, cex.lab = 1)
 dev.off()
 
@@ -374,7 +374,7 @@ top_23 = trait_matrix_common %>%
 
   #with scale
 #pdf("functional_diversity/functional_dendrogram_23.pdf", width = 8.5, height = 11)
-par(pin=c(4.5,9.5))         #plot dimensions (width, height)
+#par(pin=c(4.5,9.5))         #plot dimensions (width, height)
 plot(func.dist.23, horiz=TRUE, main = "Functional Dendrogram", cex = 1, cex.main = 2, cex.lab = 1)
 dev.off()
 
@@ -418,7 +418,7 @@ dend6 =
 
 #plot
 #pdf("functional_diversity/functional_dendrogram_23color.pdf", width = 9, height = 11)
-par(pin=c(4,9))
+#par(pin=c(4,9))
 #par(mar = c(3,3,3,7))
 plot(dend6,
      main= "Florida Keys Reef Fish\nFunctional dendrogram",
