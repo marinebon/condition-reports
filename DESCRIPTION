@@ -1,5 +1,5 @@
 Package: placeholder
 Title: Does not matter.
 Version: 0.0.1
-Imports: dplyr, dygraphs, ggplot2, htmltools, lattice, leaflet, ncdf4, raster, RCurl, readr, rmarkdown, robis, sf, stringr, tidyverse, vembedr, xts
+Imports: ape, car, clue, colorspace, cowplot, data.table, d3treeR, dendextend, devtools, dplyr, dygraphs, FD, fpc, FSA, ggplot2, grid, gridExtra, htmltools, htmlwidgets, lattice, leaflet, mgcv, ncdf4, parallel, plotrix, purrr, raster, rcompanion, RCurl, readr, reshape2, rmarkdown, robis, rvc, sf, SnowballC, stringr, tidyverse, treemap, tm, vegan, vembedr, webshot, wordcloud, xts
 Remotes: rstudio/rmarkdown
