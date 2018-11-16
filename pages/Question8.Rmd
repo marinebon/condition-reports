@@ -17,14 +17,14 @@ library(futile.logger)
 csv_tv = "http://oceanview.pfeg.noaa.gov/erddap/tabledap/cciea_MM_pup_count.csv?time,mean_growth_rate"
 title = "cciea_pup_count"
 y_label = "mean growth rate"
-x_label = 'Year',
-v_label = y_label,
-filter  = NULL,
-col_t   = "time",
-col_y   = "mean_growth_rate",
-skip    = 0,
-use_kmb = T,
-group_by= NULL,
+x_label = 'Year'
+v_label = y_label
+filter  = NULL
+col_t   = "time"
+col_y   = "mean_growth_rate"
+skip    = 0
+use_kmb = T
+group_by= NULL
 std_err= NULL
 
 
