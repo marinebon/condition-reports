@@ -131,7 +131,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 if (!file.exists("functional_diversity/func_dist_rds")){
 
-  trait_matrix = read_csv('functional_diversity/species_trait_matrix_316_spp_10_25_17.csv') #316 species
+  trait_matrix = read_csv('https://raw.githubusercontent.com/mhepner90/RVC/master/functional_diversity/species_trait_matrix_316_spp.csv') #316 species
 
   trait_matrix = trait_matrix %>%
     as.tibble() %>%
@@ -227,10 +227,10 @@ if (!file.exists("functional_diversity/func_dist_rds")){
   saveRDS(func.dist, "functional_diversity/func_dist_rds")
 
 } else { #read data
-  func.dist = read_rds("functional_diversity/func_dist_rds")
+  func.dist = read_rds("https://github.com/mhepner90/RVC/blob/master/functional_diversity/func_dist_rds?raw=true")
 }
 
-func_dist_common = read_rds("functional_diversity/func_dist_common_name_rds")
+func_dist_common = read_rds("https://github.com/mhepner90/RVC/blob/master/functional_diversity/func_dist_common_name_rds?raw=true")
 func_dist_phy_common = as.phylo(as.hclust(func_dist_common))
 
 #Plot the best tree - average
@@ -401,7 +401,7 @@ Doctorfish
 
 ```{r trait matrix for 23 species}
 
-trait_matrix = read_csv('functional_diversity/species_trait_matrix_316_spp.csv') #316 species
+trait_matrix = read_csv('https://raw.githubusercontent.com/mhepner90/RVC/master/functional_diversity/species_trait_matrix_316_spp.csv') #316 species
 
 trait_matrix_common = trait_matrix %>%
     as.tibble() %>%
@@ -545,7 +545,7 @@ dev.off()
 
 ```{r trait visualization}
 
-trait_matrix = read_csv('functional_diversity/species_trait_matrix_316_spp.csv')
+trait_matrix = read_csv('https://raw.githubusercontent.com/mhepner90/RVC/master/functional_diversity/species_trait_matrix_316_spp.csv')
 
 trait_matrix_treemap = trait_matrix %>%
   select(Common_name, Maxlength, Trophic_level, Trophic_group, Water_column,Diel_activity,Substrate_type,Complexity, Gregariousness) %>%
@@ -714,356 +714,16 @@ treemap3 =
 
 ### Florida Keys Primary Sampling Unit
 
-```{r psu abundance}
-
-if(!file.exists("psu_abun_sum_rds")){
-  #read in data
-  psu_fk_abun <- read_csv("big_csv/abundance_psu/psu_fk_abun.csv",
-                          col_types = cols(protected_status = col_character()))
-  #dim(psu_fk_abun) #3,643,306 x 10
-
-  #remove species not identified in species level and protected status all
-  psu_fk_abun_no_spp = psu_fk_abun %>%
-    filter(!stringr::str_detect(SPECIES_CD, 'SPE\\.$'))  %>% #348 species
-    filter(stringr::str_detect(protected_status, 'all'))
-  #dim(psu_fk_abun_no_spp) #1,689,982 x 10
-
-  abun_spp = psu_fk_abun_no_spp %>% filter(!abundance == "0")
-  spp_316 = unique(abun_spp$SPECIES_CD) %>% #316 species
-    as.data.frame()
-  colnames(spp_316)[1] = "SPECIES_CD"
-
-  #sum the abundance values and remove any PSU's with no species
-  psu_abun_sum <- psu_fk_abun_no_spp %>%
-    group_by(YEAR, PRIMARY_SAMPLE_UNIT, STRAT) %>%
-    summarize(abundance_sum = sum(abundance)) %>%
-    filter(!abundance_sum == "0")
-    #dim(psu_abun_sum) #5241*4
-
-  #remove PSU-'s with 1 species [2006,602U INPR] [2016,  1010U, INPR] AND removed 2001 PSU 222U HRRF abundance 5X greater than normal (50,114 species)
-  psu_abun_sum = psu_abun_sum[!(psu_abun_sum$YEAR == "2006" &
-                                  psu_abun_sum$PRIMARY_SAMPLE_UNIT == "602U" |
-                                  psu_abun_sum$YEAR == "2016" &
-                                  psu_abun_sum$PRIMARY_SAMPLE_UNIT == "1010U" |
-                                  psu_abun_sum$YEAR == "2001" &
-                                  psu_abun_sum$PRIMARY_SAMPLE_UNIT == "222U"),]
-  #dim(psu_abun_sum) # 5238 x 4
-
-  saveRDS(psu_abun_sum, "psu_abun_sum_rds")
-
-  write_csv(psu_abun_sum, "big_csv/abundance_psu/psu_abun_sum.csv")
-
-
-} else{
-  psu_abun = read_rds("psu_abun_sum_rds")
-}
-RVCdata_FK = read_rds('big_csv/RVCdata_FK.rds')
-family = RVCdata_FK$taxonomic_data
-psu_family = left_join(psu_fk_abun_no_spp, family, by= "SPECIES_CD")
-
-psu_family_group <- psu_family %>%
-    group_by(FAMILY) %>%
-    summarize(abundance_sum = sum(abundance)) %>%
-    filter(abundance_sum != "0") %>%
-  mutate(fam_percent = (abundance_sum/sum(abundance_sum))*100) %>%
-  arrange(desc(fam_percent))
-
-write_csv(psu_family_group, "psu_family_group.csv")
-
-psu_common <- psu_family %>%
-    group_by(COMNAME) %>%
-    summarize(abundance_sum = sum(abundance)) %>%
-    filter(abundance_sum != "0") %>% #removes 32 species
-  mutate(com_percent = (abundance_sum/sum(abundance_sum))*100) %>%
-  arrange(desc(com_percent))
-
-psu_sciname <- psu_family %>%
-    group_by(SCINAME) %>%
-    summarize(abundance_sum = sum(abundance)) %>%
-    filter(abundance_sum != "0") %>% #removes 32 species
-  mutate(com_percent = (abundance_sum/sum(abundance_sum))*100) %>%
-  arrange(desc(com_percent))
-
-write_csv(psu_common, "psu_common.csv")
-
-#FAMILY abundance_sum fam_percent
-#           <fctr>         <dbl>       <dbl>
-# 1       Labridae     433089.31  20.4584806
-# 2  Pomacentridae     367204.18  17.3461672
-# 3     Haemulidae     356922.01  16.8604533
-# 4       Gobiidae     227345.17  10.7394402
-# 5       Scaridae     195407.42   9.2307494
-
-
-#INPR 2002 PSU 472U detected abundance sum 10,414 species (abnormally large)
-INPR_2002 = psu_fk_abun_no_spp %>%
-  filter(YEAR == "2002") %>%
-  filter(STRAT == "INPR") %>%
-  filter(PRIMARY_SAMPLE_UNIT == "472U") %>%
-  arrange(desc(abundance))
-#HYP HARR abundance 9999.5
-
-#OFPR 2003 PSU 119U detected abundance sum 5,698 species (abnormally large)
-OFPR_2003 = psu_fk_abun_no_spp %>%
-  filter(YEAR == "2003") %>%
-  filter(STRAT == "OFPR") %>%
-  filter(PRIMARY_SAMPLE_UNIT == "119U") %>%
-  arrange(desc(abundance))
-#DEC PUNC abundance 5000.0
-
-#MCPR 2004 PSU 403U detected abundance sum 5,698 species (abnormally large)
-MCPR_2004 = psu_fk_abun_no_spp %>%
-  filter(YEAR == "2004") %>%
-  filter(STRAT == "MCPR") %>%
-  filter(PRIMARY_SAMPLE_UNIT == "403U") %>%
-  arrange(desc(abundance))
-#HYP HARR abundance 5000.0
-
-FMLR_2001 = psu_fk_abun_no_spp %>%
-  filter(YEAR == "2001") %>%
-  filter(STRAT == "FMLR") %>%
-  filter(PRIMARY_SAMPLE_UNIT == "220U") %>%
-  arrange(desc(abundance))
-#ATH STIP abundance 10,000.0 Hardhead Silverside, Atherinidae Atherinomorus
-
-FDLR_2002 = psu_fk_abun_no_spp %>%
-  filter(YEAR == "2001") %>%
-  filter(STRAT == "FDLR") %>%
-  filter(PRIMARY_SAMPLE_UNIT == "120U") %>%
-  arrange(desc(abundance))
-#COR PERS 1,690 #Masked Goby, Coryphopterus personatus
-
-```
-
 ```{r psu biomass}
-
-if(!file.exists("psu_bio_sum_rds")){
-
-  #read in data
-  psu_fk_bio <- read_csv('big_csv/biomass_psu/psu_fk_biomass.csv',
-                         col_types = cols( protected_status = col_character()))
-    #dim(psu_fk_bio) 3,429,476*10
-
-  #remove species not identified in species level and protected status all   
-  psu_fk_bio_no_spp = psu_fk_bio %>%
-    filter(!stringr::str_detect(SPECIES_CD, 'SPE\\.$')) %>% #328 species  
-    filter(stringr::str_detect(protected_status, 'all'))  
-    #dim(psu_fk_bio_no_spp) 1,609,672 x 10
-
-  #sum the biomass values and remove any PSU's with no species
-  psu_bio_sum <- psu_fk_bio_no_spp %>%
-    group_by(YEAR, PRIMARY_SAMPLE_UNIT, STRAT, PROT) %>%
-    summarize(biomass_sum = sum(biomass)) %>%
-    filter(!biomass_sum == "0")
-    #dim(psu_bio_sum) #5241    5
-
-  bio_spp = psu_fk_bio_no_spp %>% filter(!biomass == "0")
-  length(unique((bio_spp$SPECIES_CD))) #308 species
-
-  #remove PSU's with 1 species [2006,602U INPR] [2016,  1010U, INPR]
-  psu_bio_sum = psu_bio_sum[!(psu_bio_sum$YEAR == "2006" &
-                                psu_bio_sum$PRIMARY_SAMPLE_UNIT == "602U" |
-                                psu_bio_sum$YEAR == "2016" &
-                                psu_bio_sum$PRIMARY_SAMPLE_UNIT == "1010U" |
-                                psu_bio_sum$YEAR == "2001" &
-                                psu_bio_sum$PRIMARY_SAMPLE_UNIT == "222U"),]
-
-
-  #dim(psu_bio_sum) #5238    5
-
-   saveRDS(psu_bio_sum, "psu_bio_sum_rds")
-
-  } else{ #read data
-  psu_bio = read_rds("psu_bio_sum_rds")
-}
-
+psu_bio = read_rds("https://github.com/mhepner90/RVC/blob/master/psu_bio_sum_rds?raw=true")
 ```
 
 ```{r psu biodiversity}
-
-if(!file.exists("psu_div_rds")){
-
-  #read in psu abundance data
-  psu_fk_abun <- read_csv("big_csv/abundance_psu/psu_fk_abun.csv", col_types = cols(protected_status = col_character()))
-  #dim(psu_fk_abun) #3,643,306*10
-
-  ##remove species not identified in species level and protected status all
-  psu_fk_abun_no_spp = psu_fk_abun %>%
-    filter(!stringr::str_detect(SPECIES_CD, 'SPE\\.$')) %>%
-    filter(stringr::str_detect(protected_status, 'all'))
-    #dim(psu_fk_abun_no_spp) #1,689,982      10
-
-  #read in trait matrix
-  trait_matrix = read_csv('functional_diversity/species_trait_matrix_348_spp.csv')
-
-  #trait matrix needs to be alphabetically for FD code
-  trait_matrix = trait_matrix %>%
-    as.tibble() %>%
-    mutate(
-      SPECIES_CD = toupper(as.character(SPECIES_CD))) %>%
-    arrange(SPECIES_CD)
-
-  #compute diversity indices by PSU  
-  psu_diversity = psu_fk_abun_no_spp %>%  
-    select(YEAR, PRIMARY_SAMPLE_UNIT,STRAT,PROT,SPECIES_CD,abundance) %>% #tibble: 1,689,982 x 6
-    group_by(YEAR, PRIMARY_SAMPLE_UNIT, STRAT, PROT) %>%
-    nest(-YEAR) %>%
-    mutate(
-      data_wide = map(data, function(x)
-        full_join(x, trait_matrix %>% select(SPECIES_CD), by='SPECIES_CD') %>%
-          mutate(abundance = ifelse(is.na(abundance), 0, abundance)) %>%
-          spread(SPECIES_CD, abundance, fill =0)),
-      data_wide = map(data, ~ spread(data=.x, SPECIES_CD, abundance, fill =0)),
-      richness = map( #species richness
-        data_wide,
-        function(x) specnumber(x)),
-      simpson = map( #simpson diversity as effective number of species
-        data_wide,
-        function(x) 1/(1 - diversity(x, index = 'simpson'))),
-      shannon = map( #shannon diversity as effective number of species
-        data_wide,
-        function(x) exp(diversity(x,  index = 'shannon')))) %>%
-    unnest(richness, simpson, shannon)
-  #dim(psu_diversity) #5,241 x 7
-
-    #remove PSU-'s with 1 species [2006,602U INPR] [2016,  1010U, INPR]
-  psu_diversity = psu_diversity[!(psu_diversity$YEAR == "2006" &
-                                    psu_diversity$PRIMARY_SAMPLE_UNIT == "602U" |
-                                    psu_diversity$YEAR == "2016" &
-                                    psu_diversity$PRIMARY_SAMPLE_UNIT == "1010U" |
-                                    psu_diversity$YEAR == "2001" &
-                                    psu_diversity$PRIMARY_SAMPLE_UNIT == "222U"),]
-
-  #dim(psu_diversity) #5,238 x 9
-
-  saveRDS(psu_diversity, "psu_div_rds")
-
-} else { #read data
-  psu_div = read_rds("psu_div_rds")
-}
-
+psu_div = read_rds("https://github.com/mhepner90/RVC/blob/master/psu_div_rds?raw=true")
 ```
 
 ```{r biodiversity 2.0}
-
-if(!file.exists("fd_eveness_rds")){
-
-  func.dist = read_rds("functional_diversity/func_dist_rds")
-
-  #read in trait matrix
-  traits = read.csv('functional_diversity/species_trait_matrix_316_spp_10_25_17.csv')
-
-  #Set rownames on traits and remove other info
-  rownames(traits) <- traits$SPECIES_CD
-  traits <- traits[, -c(1:4)]
-  #Convert rownames to all caps
-  rownames(traits) <- toupper(rownames(traits))
-
-  sample_data = read_csv("big_csv/sample_data/FK/sample_data_all_years.csv")
-  #remove PSU-'s with 1 species [2006,602U INPR] [2016,  1010U, INPR] AND removed 2001 PSU 222U HRRF abundance 5X greater than normal (50,114 species)
-  sample_data = sample_data[!(sample_data$YEAR == "2006" &
-                                  sample_data$PRIMARY_SAMPLE_UNIT == "602U" |
-                                  sample_data$YEAR == "2016" &
-                                  sample_data$PRIMARY_SAMPLE_UNIT == "1010U" |
-                                  sample_data$YEAR == "2001" &
-                                  sample_data$PRIMARY_SAMPLE_UNIT == "222U"),]
-
-  saveRDS(sample_data, "sample_data_rds")
-
-  psu_fk_abun <- read_csv("big_csv/abundance_psu/psu_fk_abun.csv", col_types = cols(protected_status = col_character())) #3,643,306*10
-
-  #remove species not identified in species level and protected status all
-  psu_fk_abun_no_spp = psu_fk_abun %>%
-    filter(!stringr::str_detect(SPECIES_CD, 'SPE\\.$')) %>%
-    filter(stringr::str_detect(protected_status, 'all'))
-    #dim(psu_fk_abun_no_spp) #1,689,982      10
-
-  #remove PSU-'s with 1 species [2006,602U INPR] [2016,  1010U, INPR] AND removed 2001 PSU 222U HRRF abundance 5X greater than normal (50,114 species)
-  psu_abun_sum = psu_fk_abun_no_spp[!(psu_fk_abun_no_spp$YEAR == "2006" &
-                                  psu_fk_abun_no_spp$PRIMARY_SAMPLE_UNIT == "602U" |
-                                  psu_fk_abun_no_spp$YEAR == "2016" &
-                                  psu_fk_abun_no_spp$PRIMARY_SAMPLE_UNIT == "1010U" |
-                                  psu_fk_abun_no_spp$YEAR == "2001" &
-                                  psu_fk_abun_no_spp$PRIMARY_SAMPLE_UNIT == "222U"),]
-  #dim(psu_abun_sum) # 5238 x 4
-
-
-  abund = psu_abun_sum %>%
-    select(YEAR, PRIMARY_SAMPLE_UNIT,STRAT,PROT, SPECIES_CD, abundance)
-  #1,689,982 * 6
-
-  # Cast abundance longways (species as columns)
-  abundmat <- spread(abund, SPECIES_CD, abundance, fill = 0)
-  #dim(abundmat) #5241  352
-
-  # What is up with these species not being in the trait matrix??
-  checkthese <- colnames(abundmat)[!colnames(abundmat) %in% rownames(traits)]
-
-  # Subset species whose names only appear in traits
-  abundmat <- abundmat[colnames(abundmat) %in% rownames(traits)]
-  #dim(abundmat) #5,241    348
-
-  # Drop communities with no species (roughly 500 sites)
-  abundmat <- abundmat[!rowSums(abundmat) == 0,]
-  #dim(abundmat) #5,241     316
-  abundmat <- abundmat[!rowSums(abundmat) == 1,]
-  #dim(abundmat) #5238  316
-
-  #Calculate relative values for community matrix
-  rel.mat=abundmat/apply(abundmat,1,sum)
-
-  #Compute species diversity
-  species.dist=matrix(1,ncol(abundmat),ncol(abundmat))-diag(rep(1,ncol(abundmat)))
-  species.div=1/(1-apply(rel.mat,1,function(x) t(x) %*% species.dist %*% x))
-
-  #Compute evenness (as in Jost 2010 Diversity)
-  evenness=log(species.div)/log(rowSums(abundmat>0))
-
-  #Ensure that all evenness calculations are not >1 (bug)
-  func.div=1/(1-apply(rel.mat,1,function(x) t(x) %*% as.matrix(func.dist) %*% x))
-
-  #Bind all to the original dataframe (need to remove psu with 1 species detected)
-  list = cbind(sample_data,evenness,species.div,func.div)
-
-  fd_evenness = list %>%
-    select(PRIMARY_SAMPLE_UNIT, YEAR, STRAT, PROT, species.div, func.div, evenness) %>%
-    group_by(YEAR,PRIMARY_SAMPLE_UNIT)
-
-  saveRDS(fd_evenness,"fd_eveness_rds")
-
-} {else
-  fd_evenness = read_rds("fd_eveness_rds")
-}
-
-```
-
-```{r bind psu matrices and sample data}
-
-if(!file.exists("psu_matrices_data_rds")){
-  psu_abun = read_rds("psu_abun_sum_rds") #5,238*4
-  psu_bio = read_rds("psu_bio_sum_rds") #5,238*5
-  psu_div = read_rds("psu_div_rds") # #5,238*9
-  fd_evenness = read_rds("fd_eveness_rds") #5238*7
-  sample_data = read_rds("sample_data_rds") #5238*22
-  #PRIMARY_SAMPLE_UNIT, YEAR, MONTH, DAY, STATION_N,R LAT_DEGREES, LON_DEGREES, DEPTH, UNDERWATER_VISIBILITY, MAPGRID_NR, HABITAT_CD, ZONE_NR, SUBREGION_NR, MPA_NR, PROT, STRAT
-
-  all_matrices = inner_join(psu_abun, psu_bio) #5,241*6 (+mean abundance and biomass)
-  all_matrices = inner_join(all_matrices, psu_div) #5,241*9 (+richness, simpson, shannon)
-  all_matrices = inner_join(all_matrices, fd_evenness) #5,241*12(+spec.div, functional.div, evenness)
-  all_matrices_data = inner_join(all_matrices, sample_data) #5,241 x 24
-
-  all_matrices_data = all_matrices_data %>%
-    select(-data, -data_wide)
-
-  saveRDS(all_matrices_data, "psu_matrices_data_rds")
-
-  } else{
-
-    all_matrices_data = read_rds("psu_matrices_data_rds") #5238, 32
-
-    write_csv(all_matrices_data, "big_csv/all_matrices_data.csv")
-  }
-
+fd_evenness = read_rds("https://github.com/mhepner90/RVC/blob/master/fd_eveness_rds?raw=true")
 ```
 
 ## Plots
@@ -1085,71 +745,15 @@ library(ggplot2)
 library(lattice)
 library(tidyverse)
 
-all_matrices_data = read_rds("psu_matrices_data_rds")
+all_matrices_data = read_rds("https://github.com/mhepner90/RVC/blob/master/psu_matrices_data_rds?raw=true")
 
-if(!file.exists("stats_all_matrices_data_rds")){
-
-  stats_all_matrices_data = all_matrices_data %>%
-    group_by(YEAR, STRAT) %>% #110 groups
-    summarize(
-      abundance_mean = mean(abundance_sum),
-      abundance_n = length(abundance_sum),
-      abundance_sd = sd(abundance_sum),
-      abundance_se = abundance_sd / sqrt(abundance_n),
-      abundance_min = min(abundance_sum),
-      abundance_max = max(abundance_sum),
-      biomass_mean = mean(biomass_sum),
-      biomass_n = length(biomass_sum),
-      biomass_sd = sd(biomass_sum),
-      biomass_se = biomass_sd / sqrt(biomass_n),
-      biomass_min = min(biomass_sum),
-      biomass_max = max(biomass_sum),
-      richness_mean = mean(richness),
-      richness_n = length(richness),
-      richness_sd = sd(richness),
-      richness_se = richness_sd / sqrt(richness_n),
-      richness_min = min(richness),
-      richness_max = max(richness),
-      simpson_mean = mean(simpson),
-      simpson_n = length(simpson),
-      simpson_sd = sd(simpson),
-      simpson_se = simpson_sd / sqrt(simpson_n),
-      simpson_min = min(simpson),
-      simpson_max = max(simpson),
-      shannon_mean = mean(shannon),
-      shannon_n = length(shannon),
-      shannon_sd = sd(shannon),
-      shannon_se = shannon_sd / sqrt(shannon_n),
-      shannon_min = min(shannon),
-      shannon_max = max(shannon),
-      func.div_mean = mean(func.div),
-      func.div_n = length(func.div),
-      func.div_sd = sd(func.div),
-      func.div_se = func.div_sd / sqrt(func.div_n),
-      func.div_min = min(func.div),
-      func.div_max = max(func.div),
-      evenness_mean = mean(evenness),
-      evenness_n = length(evenness),
-      evenness_sd = sd(evenness),
-      evenness_se = evenness_sd / sqrt(evenness_n),
-      evenness_min = min(evenness),
-      evenness_max = max(evenness))
-
-  saveRDS(stats_all_matrices_data, "stats_all_matrices_data_rds")
-
-  write_csv(stats_all_matrices_data, "big_csv/stats_all_matrices_data.csv")
-
-  } else{
-  stats_all_matrices_data = read_rds("stats_all_matrices_data_rds")
-  }
-
+stats_all_matrices_data = read_rds("https://github.com/mhepner90/RVC/blob/master/stats_all_matrices_data_rds?raw=true")
 
 mean_indices = stats_all_matrices_data %>%
   select(YEAR, STRAT, abundance_mean, biomass_mean, evenness_mean, richness_mean, simpson_mean, shannon_mean, func.div_mean) %>%
   group_by(YEAR, STRAT) %>%
   arrange(YEAR, desc(abundance_mean))
 
-write_csv(mean_indices, "mean_indices.csv")
 # plot mean and se across strat and year using line graphs
 
 # BY STRAT and YEAR
@@ -1448,63 +1052,7 @@ ggplot(stats_all_matrices_data, aes(x=YEAR, y=evenness_mean, group=YEAR)) +
 
 ```{r Plot by 7 strata by year into 2 line graphs}
 
-if(!file.exists("stats_all_matrices_data_rds")){
-
-  all_matrices_data = read_rds("psu_matrices_data_rds")
-
-  stats_all_matrices_data = all_matrices_data %>%
-    group_by(YEAR, STRAT) %>% #110 groups
-    summarize(
-      abundance_mean = mean(abundance_sum),
-      abundance_n = length(abundance_sum),
-      abundance_sd = sd(abundance_sum),
-      abundance_se = abundance_sd / sqrt(abundance_n),
-      abundance_min = min(abundance_sum),
-      abundance_max = max(abundance_sum),
-      biomass_mean = mean(biomass_sum),
-      biomass_n = length(biomass_sum),
-      biomass_sd = sd(biomass_sum),
-      biomass_se = biomass_sd / sqrt(biomass_n),
-      biomass_min = min(biomass_sum),
-      biomass_max = max(biomass_sum),
-      richness_mean = mean(richness),
-      richness_n = length(richness),
-      richness_sd = sd(richness),
-      richness_se = richness_sd / sqrt(richness_n),
-      richness_min = min(richness),
-      richness_max = max(richness),
-      simpson_mean = mean(simpson),
-      simpson_n = length(simpson),
-      simpson_sd = sd(simpson),
-      simpson_se = simpson_sd / sqrt(simpson_n),
-      simpson_min = min(simpson),
-      simpson_max = max(simpson),
-      shannon_mean = mean(shannon),
-      shannon_n = length(shannon),
-      shannon_sd = sd(shannon),
-      shannon_se = shannon_sd / sqrt(shannon_n),
-      shannon_min = min(shannon),
-      shannon_max = max(shannon),
-      func.div_mean = mean(func.div),
-      func.div_n = length(func.div),
-      func.div_sd = sd(func.div),
-      func.div_se = func.div_sd / sqrt(func.div_n),
-      func.div_min = min(func.div),
-      func.div_max = max(func.div),
-      evenness_mean = mean(evenness),
-      evenness_n = length(evenness),
-      evenness_sd = sd(evenness),
-      evenness_se = evenness_sd / sqrt(evenness_n),
-      evenness_min = min(evenness),
-      evenness_max = max(evenness))
-
-  saveRDS(stats_all_matrices_data, "stats_all_matrices_data_rds")
-
-  write_csv(stats_all_matrices_data, "big_csv/stats_all_matrices_data.csv")
-
-  } else{
-  stats_all_matrices_data = read_rds("stats_all_matrices_data_rds")
-  }
+stats_all_matrices_data = read_rds("https://github.com/mhepner90/RVC/blob/master/stats_all_matrices_data_rds?raw=true")
 
 forereef_indices = stats_all_matrices_data %>%
   filter(STRAT != "INPR") %>%
@@ -2018,7 +1566,7 @@ ggplot(stats_all_matrices_data, aes(x=YEAR, y=evenness_mean, group=YEAR)) +
 Plot by year with rich, simp, shan, and func on one graph
 ```{r diveristy on one plot}
 
-all_matrices_data = read_rds("psu_matrices_data_rds")
+all_matrices_data = read_rds("https://github.com/mhepner90/RVC/blob/master/psu_matrices_data_rds?raw=true")
 
 #Melt dataframe so diversity indices are in a single column
   x = reshape2::melt(all_matrices_data, id.vars = c("YEAR"),
@@ -2097,63 +1645,8 @@ Plot each strata individually by index
 
 ```{r plot abundance by strata indv in 7 line graphs}
 
-all_matrices_data = read_rds("psu_matrices_data_rds")
-
-if(!file.exists("stats_all_matrices_data_rds")){
-
-  stats_all_matrices_data = all_matrices_data %>%
-    group_by(YEAR, STRAT) %>% #110 groups
-    summarize(
-      abundance_mean = mean(abundance_sum),
-      abundance_n = length(abundance_sum),
-      abundance_sd = sd(abundance_sum),
-      abundance_se = abundance_sd / sqrt(abundance_n),
-      abundance_min = min(abundance_sum),
-      abundance_max = max(abundance_sum),
-      biomass_mean = mean(biomass_sum),
-      biomass_n = length(biomass_sum),
-      biomass_sd = sd(biomass_sum),
-      biomass_se = biomass_sd / sqrt(biomass_n),
-      biomass_min = min(biomass_sum),
-      biomass_max = max(biomass_sum),
-      richness_mean = mean(richness),
-      richness_n = length(richness),
-      richness_sd = sd(richness),
-      richness_se = richness_sd / sqrt(richness_n),
-      richness_min = min(richness),
-      richness_max = max(richness),
-      simpson_mean = mean(simpson),
-      simpson_n = length(simpson),
-      simpson_sd = sd(simpson),
-      simpson_se = simpson_sd / sqrt(simpson_n),
-      simpson_min = min(simpson),
-      simpson_max = max(simpson),
-      shannon_mean = mean(shannon),
-      shannon_n = length(shannon),
-      shannon_sd = sd(shannon),
-      shannon_se = shannon_sd / sqrt(shannon_n),
-      shannon_min = min(shannon),
-      shannon_max = max(shannon),
-      func.div_mean = mean(func.div),
-      func.div_n = length(func.div),
-      func.div_sd = sd(func.div),
-      func.div_se = func.div_sd / sqrt(func.div_n),
-      func.div_min = min(func.div),
-      func.div_max = max(func.div),
-      evenness_mean = mean(evenness),
-      evenness_n = length(evenness),
-      evenness_sd = sd(evenness),
-      evenness_se = evenness_sd / sqrt(evenness_n),
-      evenness_min = min(evenness),
-      evenness_max = max(evenness))
-
-  saveRDS(stats_all_matrices_data, "stats_all_matrices_data_rds")
-
-  write_csv(stats_all_matrices_data, "big_csv/stats_all_matrices_data.csv")
-
-  } else{
-  stats_all_matrices_data = read_rds("stats_all_matrices_data_rds")
-  }
+all_matrices_data = read_rds("https://github.com/mhepner90/RVC/blob/master/psu_matrices_data_rds?raw=true")
+stats_all_matrices_data = read_rds("https://github.com/mhepner90/RVC/blob/master/stats_all_matrices_data_rds?raw=true")
 
 # BY STRAT and YEAR
 #abundance
@@ -3072,65 +2565,7 @@ Group strata by: patch reef, forereef, and high relief
 
 ```{r Plot by strata grouped and year}
 
-if(!file.exists("matrices_strat_grouped_rds")){
-
-  all_matrices_data = read_rds("psu_matrices_data_rds")
-
-  matrices_strat_grouped = all_matrices_data %>%
-    mutate(
-      STRAT_GROUPED =
-      ifelse(grepl("FMLR|FSLR|FDLR", STRAT), 'LINEAR_REEF',
-             ifelse(grepl("OFPR|MCPR|INPR", STRAT), 'PATCH_REEF',
-                    ifelse(grepl('HRRF', STRAT), 'HIGH_RELIEF', "IDK")))) %>%
-    group_by(YEAR, STRAT_GROUPED) %>%
-    summarize(
-      abundance_mean = mean(abundance_sum),
-      abundance_n = length(abundance_sum),
-      abundance_sd = sd(abundance_sum),
-      abundance_se = abundance_sd / sqrt(abundance_n),
-      abundance_min = min(abundance_sum),
-      abundance_max = max(abundance_sum),
-      biomass_mean = mean(biomass_sum),
-      biomass_n = length(biomass_sum),
-      biomass_sd = sd(biomass_sum),
-      biomass_se = biomass_sd / sqrt(biomass_n),
-      biomass_min = min(biomass_sum),
-      biomass_max = max(biomass_sum),
-      richness_mean = mean(richness),
-      richness_n = length(richness),
-      richness_sd = sd(richness),
-      richness_se = richness_sd / sqrt(richness_n),
-      richness_min = min(richness),
-      richness_max = max(richness),
-      simpson_mean = mean(simpson),
-      simpson_n = length(simpson),
-      simpson_sd = sd(simpson),
-      simpson_se = simpson_sd / sqrt(simpson_n),
-      simpson_min = min(simpson),
-      simpson_max = max(simpson),
-      shannon_mean = mean(shannon),
-      shannon_n = length(shannon),
-      shannon_sd = sd(shannon),
-      shannon_se = shannon_sd / sqrt(shannon_n),
-      shannon_min = min(shannon),
-      shannon_max = max(shannon),
-      func.div_mean = mean(func.div),
-      func.div_n = length(func.div),
-      func.div_sd = sd(func.div),
-      func.div_se = func.div_sd / sqrt(func.div_n),
-      func.div_min = min(func.div),
-      func.div_max = max(func.div),
-      evenness_mean = mean(evenness),
-      evenness_n = length(evenness),
-      evenness_sd = sd(evenness),
-      evenness_se = evenness_sd / sqrt(evenness_n),
-      evenness_min = min(evenness),
-      evenness_max = max(evenness))
-
-  saveRDS(matrices_strat_grouped, "matrices_strat_grouped_rds")
-  } else {
-    matrices_strat_grouped = read_rds("matrices_strat_grouped_rds")
-    }
+matrices_strat_grouped = read_rds("https://github.com/mhepner90/RVC/blob/master/matrices_strat_grouped_rds?raw=true")
 
 # by STRAT_GROUPED and YEAR
 #abundance
@@ -3468,7 +2903,7 @@ Plots of indices by subregions, 7 strata and across all years
 
 ```{r Plots of 7 strata grouped by year}
 
-all_matrices_data = read_rds("psu_matrices_data_rds")
+all_matrices_data = read_rds("https://github.com/mhepner90/RVC/blob/master/psu_matrices_data_rds?raw=true")
 
 #all_matrices_data_with_subregion = readRDS("psu_matrices_data_with_subregion_rds")
 
@@ -3596,81 +3031,8 @@ Group strata by: patch reef, forereef, and high relief
 Subregions: UK, MK, LK
 
 ```{r Plot by grouped strata subregion and year}
+matrices_strat_grouped_with_subregion = read_rds("https://github.com/mhepner90/RVC/blob/master/matrices_strat_grouped_with_subregion_rds?raw=true") # 184 x 45
 
-if(!file.exists("matrices_strat_grouped_with_subregion_rds")){
-
-  all_matrices_data = read_rds("psu_matrices_data_rds") # 5238 x 32
-  subregions = as.tibble(read_csv("big_csv/subregion_domains/subregion_domains_by_psu.csv")) # 5241 x 3
-
-    #remove PSU-'s with 1 species [2006,602U INPR] [2016,  1010U, INPR]
- subregions = subregions[!(subregions$YEAR == "2006" &
-                             subregions$PRIMARY_SAMPLE_UNIT == "602U" |
-                             subregions$YEAR == "2016" &
-                             subregions$PRIMARY_SAMPLE_UNIT == "1010U" |
-                             subregions$YEAR == "2001" &
-                             subregions$PRIMARY_SAMPLE_UNIT == "222U"),] #5238 x 3
-  saveRDS(subregions, "subregions_rds")
-
-  all_matrices_data_with_subregion = inner_join(all_matrices_data, subregions) #5,239 x 25                  
-
-  saveRDS(all_matrices_data_with_subregion, "psu_matrices_data_with_subregion_rds")
-
-  matrices_strat_grouped_with_subregion = all_matrices_data_with_subregion %>%
-    mutate(
-      STRAT_GROUPED =
-      ifelse(grepl("FMLR|FSLR|FDLR", STRAT), 'LINEAR_REEF',
-             ifelse(grepl("OFPR|MCPR|INPR", STRAT), 'PATCH_REEF',
-                    ifelse(grepl('HRRF', STRAT), 'HIGH_RELIEF', "IDK")))) %>%
-    filter(SUBREGION_DOMAIN != "BiscBay") %>%
-    group_by(SUBREGION_DOMAIN, STRAT_GROUPED, YEAR) %>%
-    summarize(
-      abundance_mean = mean(abundance_sum),
-      abundance_n = length(abundance_sum),
-      abundance_sd = sd(abundance_sum),
-      abundance_se = abundance_sd / sqrt(abundance_n),
-      abundance_min = min(abundance_sum),
-      abundance_max = max(abundance_sum),
-      biomass_mean = mean(biomass_sum),
-      biomass_n = length(biomass_sum),
-      biomass_sd = sd(biomass_sum),
-      biomass_se = biomass_sd / sqrt(biomass_n),
-      biomass_min = min(biomass_sum),
-      biomass_max = max(biomass_sum),
-      richness_mean = mean(richness),
-      richness_n = length(richness),
-      richness_sd = sd(richness),
-      richness_se = richness_sd / sqrt(richness_n),
-      richness_min = min(richness),
-      richness_max = max(richness),
-      simpson_mean = mean(simpson),
-      simpson_n = length(simpson),
-      simpson_sd = sd(simpson),
-      simpson_se = simpson_sd / sqrt(simpson_n),
-      simpson_min = min(simpson),
-      simpson_max = max(simpson),
-      shannon_mean = mean(shannon),
-      shannon_n = length(shannon),
-      shannon_sd = sd(shannon),
-      shannon_se = shannon_sd / sqrt(shannon_n),
-      shannon_min = min(shannon),
-      shannon_max = max(shannon),
-      func.div_mean = mean(func.div),
-      func.div_n = length(func.div),
-      func.div_sd = sd(func.div),
-      func.div_se = func.div_sd / sqrt(func.div_n),
-      func.div_min = min(func.div),
-      func.div_max = max(func.div),
-      evenness_mean = mean(evenness, na.rm = T),
-      evenness_n = length(evenness),
-      evenness_sd = sd(evenness, na.rm = T),
-      evenness_se = evenness_sd / sqrt(evenness_n),
-      evenness_min = min(evenness),
-      evenness_max = max(evenness))
-
-  saveRDS(matrices_strat_grouped_with_subregion, "matrices_strat_grouped_with_subregion_rds")
-  } else {
-    matrices_strat_grouped_with_subregion = read_rds("matrices_strat_grouped_with_subregion_rds") # 184 x 45
-    }
 
 #abundance
 ab_sy_HR = matrices_strat_grouped_with_subregion %>% filter(STRAT_GROUPED=="HIGH_RELIEF" & SUBREGION_DOMAIN!="BiscBay") %>%
@@ -3834,7 +3196,7 @@ Plots by subregion across years (without strata type)
 
 ```{r plot by subregion and year (no strata)}
 
-all_matrices_data_with_subregion = read_rds("psu_matrices_data_with_subregion_rds")
+all_matrices_data_with_subregion = read_rds("https://github.com/mhepner90/RVC/blob/master/psu_matrices_data_with_subregion_rds?raw=true")
 
   matrices_strat_grouped_with_subregion = all_matrices_data_with_subregion %>%
     mutate(
@@ -4053,71 +3415,7 @@ Subregions: UK, MK, LK
 
 ```{r Plot by subregion and grouped strat (all years combined)}
 
-if(!file.exists("matrices_strat_and_year_grouped_with_subregion_rds")){
-
-  all_matrices_data = read_rds("psu_matrices_data_rds") # 5238 x 23
-  subregions = readRDS("subregions_rds") # 5238 x 3
-
-  all_matrices_data_with_subregion = inner_join(all_matrices_data, subregions) #5,241 x 25                  
-  saveRDS(all_matrices_data_with_subregion, "psu_matrices_data_with_subregion_rds")
-
-  matrices_strat_and_year_grouped = all_matrices_data_with_subregion %>%
-    mutate(
-      STRAT_GROUPED =
-      ifelse(grepl("FMLR|FSLR|FDLR", STRAT), 'LINEAR_REEF',
-             ifelse(grepl("OFPR|MCPR|INPR", STRAT), 'PATCH_REEF',
-                    ifelse(grepl('HRRF', STRAT), 'HIGH_RELIEF', "IDK")))) %>%
-    filter(SUBREGION_DOMAIN != "BiscBay") %>%
-    group_by(SUBREGION_DOMAIN, STRAT_GROUPED) %>%
-    summarize(
-      abundance_mean = mean(abundance_sum),
-      abundance_n = length(abundance_sum),
-      abundance_sd = sd(abundance_sum),
-      abundance_se = abundance_sd / sqrt(abundance_n),
-      abundance_min = min(abundance_sum),
-      abundance_max = max(abundance_sum),
-      biomass_mean = mean(biomass_sum),
-      biomass_n = length(biomass_sum),
-      biomass_sd = sd(biomass_sum),
-      biomass_se = biomass_sd / sqrt(biomass_n),
-      biomass_min = min(biomass_sum),
-      biomass_max = max(biomass_sum),
-      richness_mean = mean(richness),
-      richness_n = length(richness),
-      richness_sd = sd(richness),
-      richness_se = richness_sd / sqrt(richness_n),
-      richness_min = min(richness),
-      richness_max = max(richness),
-      simpson_mean = mean(simpson),
-      simpson_n = length(simpson),
-      simpson_sd = sd(simpson),
-      simpson_se = simpson_sd / sqrt(simpson_n),
-      simpson_min = min(simpson),
-      simpson_max = max(simpson),
-      shannon_mean = mean(shannon),
-      shannon_n = length(shannon),
-      shannon_sd = sd(shannon),
-      shannon_se = shannon_sd / sqrt(shannon_n),
-      shannon_min = min(shannon),
-      shannon_max = max(shannon),
-      func.div_mean = mean(func.div),
-      func.div_n = length(func.div),
-      func.div_sd = sd(func.div),
-      func.div_se = func.div_sd / sqrt(func.div_n),
-      func.div_min = min(func.div),
-      func.div_max = max(func.div),
-      evenness_mean = mean(evenness),
-      evenness_n = length(evenness),
-      evenness_sd = sd(evenness),
-      evenness_se = evenness_sd / sqrt(evenness_n),
-      evenness_min = min(evenness),
-      evenness_max = max(evenness))
-
-  saveRDS(matrices_strat_and_year_grouped, "matrices_strat_and_year_grouped_with_subregion_rds")
-  } else {
-    matrices_strat_and_year_grouped = read_rds("matrices_strat_and_year_grouped_with_subregion_rds")
-    }
-
+matrices_strat_and_year_grouped = read_rds("https://github.com/mhepner90/RVC/blob/master/matrices_strat_and_year_grouped_with_subregion_rds?raw=true")
 
 # by STRAT_GROUPED and subregion
 #abundance
@@ -4326,64 +3624,7 @@ ggplot(data = matrices_strat_grouped) +
 ```
 
 ```{r plots by PROT and year}
-
-if(!file.exists("matrices_strat_grouped_rds")){
-
-  all_matrices_data = read_rds("psu_matrices_data_rds")
-
-  matrices_ntmr = all_matrices_data %>%
-    group_by(YEAR, PROT) %>% #add subregion later
-    summarize(
-      abundance_mean = mean(abundance_sum),
-      abundance_n = length(abundance_sum),
-      abundance_sd = sd(abundance_sum),
-      abundance_se = abundance_sd / sqrt(abundance_n),
-      abundance_min = min(abundance_sum),
-      abundance_max = max(abundance_sum),
-      biomass_mean = mean(biomass_sum),
-      biomass_n = length(biomass_sum),
-      biomass_sd = sd(biomass_sum),
-      biomass_se = biomass_sd / sqrt(biomass_n),
-      biomass_min = min(biomass_sum),
-      biomass_max = max(biomass_sum),
-      richness_mean = mean(richness),
-      richness_n = length(richness),
-      richness_sd = sd(richness),
-      richness_se = richness_sd / sqrt(richness_n),
-      richness_min = min(richness),
-      richness_max = max(richness),
-      simpson_mean = mean(simpson),
-      simpson_n = length(simpson),
-      simpson_sd = sd(simpson),
-      simpson_se = simpson_sd / sqrt(simpson_n),
-      simpson_min = min(simpson),
-      simpson_max = max(simpson),
-      shannon_mean = mean(shannon),
-      shannon_n = length(shannon),
-      shannon_sd = sd(shannon),
-      shannon_se = shannon_sd / sqrt(shannon_n),
-      shannon_min = min(shannon),
-      shannon_max = max(shannon),
-      func.div_mean = mean(func.div),
-      func.div_n = length(func.div),
-      func.div_sd = sd(func.div),
-      func.div_se = func.div_sd / sqrt(func.div_n),
-      func.div_min = min(func.div),
-      func.div_max = max(func.div),
-      evenness_mean = mean(evenness),
-      evenness_n = length(evenness),
-      evenness_sd = sd(evenness),
-      evenness_se = evenness_sd / sqrt(evenness_n),
-      evenness_min = min(evenness),
-      evenness_max = max(evenness))
-
-  saveRDS(matrices_ntmr, "matrices_ntmr_rds")
-
-  write_csv(matrices_ntmr, "matrices_ntmr.csv")
-
-  }else{
-  matrices_ntmr = read_rds("matrices_ntmr_rds")
-  }
+matrices_ntmr = read_rds("https://github.com/mhepner90/RVC/blob/master/matrices_strat_grouped_rds?raw=true")
 
 # by YEAR and PROT
 #mean abundance
@@ -4638,9 +3879,9 @@ mean(func_ntmr$ratio) #0.1005665
 
 ```{r percent strat in NTMR}
 
-#matrices_ntmr = read_rds("matrices_ntmr_rds")
+#matrices_ntmr = read_rds("https://github.com/mhepner90/RVC/blob/master/matrices_ntmr_rds?raw=true")
 
-all_matrices_data = read_rds("psu_matrices_data_rds")
+all_matrices_data = read_rds("https://github.com/mhepner90/RVC/blob/master/psu_matrices_data_rds?raw=true")
 
 percent_ntmr = all_matrices_data %>% #5238
   filter(PROT != 0) %>% #1393
@@ -4730,7 +3971,7 @@ Modified from [https://stat.ethz.ch/pipermail/r-help/2011-November/295324.html]
 if(!file.exists("richness_prop.deviance_rds","richness_model_summary_rds")){
 
 # 1. Read in data and remove years (optional)
-all_matrices_data = read_rds("psu_matrices_data_rds")
+all_matrices_data = read_rds("https://github.com/mhepner90/RVC/blob/master/psu_matrices_data_rds?raw=true")
 
 gam_data = all_matrices_data %>%
   select(YEAR, PRIMARY_SAMPLE_UNIT, LON_DEGREES, LAT_DEGREES, DEPTH, STRAT, PROT, abundance_sum, biomass_sum, evenness, richness, simpson, shannon, func.div)
@@ -5296,8 +4537,8 @@ richness.partial.deviance.list = for(j in names(gam_data[,11])) {
   saveRDS(richness_model_summary, "richness_model_summary_rds")
 
   } else{
-  richness_prop.deviance = read_rds("richness_prop.deviance_rds")
-  richness_model_summary = read_rds("richness_model_summary_rds")
+  richness_prop.deviance = read_rds("https://github.com/mhepner90/RVC/blob/master/richness_prop.deviance_rds?raw=true")
+  richness_model_summary = read_rds("https://github.com/mhepner90/RVC/blob/master/richness_model_summary_rds?raw=true")
 }
 
 ```
@@ -5865,8 +5106,8 @@ if(!file.exists("abun_prop.deviance_rds","abun_model_summary_rds")){
   saveRDS(abun_model_summary, "abun_model_summary_rds")
 
 }else{
-  abun_prop.deviance = read_rds("abun_prop.deviance_rds")
-  abun_model_summary = read_rds("abun_model_summary_rds")
+  abun_prop.deviance = read_rds("https://github.com/mhepner90/RVC/blob/master/abun_prop.deviance_rds?raw=true")
+  abun_model_summary = read_rds("https://github.com/mhepner90/RVC/blob/master/abun_model_summary_rds?raw=true")
 }
 
 ```
@@ -6433,8 +5674,8 @@ if(!file.exists("bio_prop.deviance_rds", "bio_model_summary_rds")){
   saveRDS(bio_prop.deviance, "bio_prop.deviance_rds")
   saveRDS(bio_model_summary, "bio_model_summary_rds")
 } else{
-  bio_prop.deviance = read_rds("bio_prop.deviance_rds")
-  bio_model_summary = read_rds("bio_model_summary_rds")
+  bio_prop.deviance = read_rds("https://github.com/mhepner90/RVC/blob/master/bio_prop.deviance_rds?raw=true")
+  bio_model_summary = read_rds("https://github.com/mhepner90/RVC/blob/master/bio_model_summary_rds?raw=true")
 }
 
 ```
@@ -7004,8 +6245,8 @@ even_partial_deviance_list = for(j in names(gam_data[,10])) {
   saveRDS(even_model_summary, "even_model_summary_rds")
 
   }else{
-    even_partial_deviance = read_rds("even_prop.deviance_rds")
-    even_model_summary = ead_rds("even_model_summary_rds")
+    even_partial_deviance = read_rds("https://github.com/mhepner90/RVC/blob/master/even_prop.deviance_rds?raw=true")
+    even_model_summary = ead_rds("https://github.com/mhepner90/RVC/blob/master/even_model_summary_rds?raw=true")
 }
 
 ```
@@ -7574,8 +6815,8 @@ if(!file.exists("simp_prop.deviance_rds","simp_model_summary_rds")){
   saveRDS(simp_model_summary, "simp_model_summary_rds")
 
 } else{
-  simp_prop.deviance = read_rds("simp_prop.deviance_rds")
-  simp_model_summary = read_rds("simp_model_summary_rds")
+  simp_prop.deviance = read_rds("https://github.com/mhepner90/RVC/blob/master/simp_prop.deviance_rds?raw=true")
+  simp_model_summary = read_rds("https://github.com/mhepner90/RVC/blob/master/simp_model_summary_rds?raw=true")
 }
 
 ```
@@ -8145,8 +7386,8 @@ shan_partial_deviance_list = for(j in names(gam_data[,13])) {
   saveRDS(shan_model_summary, "shan_model_summary_rds")
 
 }else{
-  shan_prop.deviance = read_rds("shan_prop.deviance_rds")
-  shan_model_summary = read_rds("shan_model_summary_rds")   
+  shan_prop.deviance = read_rds("https://github.com/mhepner90/RVC/blob/master/shan_prop.deviance_rds?raw=true")
+  shan_model_summary = read_rds("https://github.com/mhepner90/RVC/blob/master/shan_model_summary_rds?raw=true")   
 }
 
 ```
@@ -8715,8 +7956,8 @@ func_partial_deviance_list = for(j in names(gam_data[,14])) {
   saveRDS(func_model_summary, "func_model_summary_rds")
 
 }else{
-  func_prop.deviance = read_rds("func_prop.deviance_rds")
-  func_model_summary = read_rds("func_model_summary_rds")
+  func_prop.deviance = read_rds("https://github.com/mhepner90/RVC/blob/master/func_prop.deviance_rds?raw=true")
+  func_model_summary = read_rds("https://github.com/mhepner90/RVC/blob/master/func_model_summary_rds?raw=true")
 }
 
 ```
@@ -8744,7 +7985,6 @@ partial_deviance_list = rbind(abun_prop.deviance, bio_prop.deviance, even_prop.d
 partial_deviance_list = partial_deviance_list %>%
     mutate(Percent_Partial_Deviance = Partial_Deviance*100)
 
-write_csv(partial_deviance_list, "partial_deviance_list.csv")
 
 library(car)
 
@@ -8754,7 +7994,7 @@ partial_deviance_list$Diversity = car::recode(partial_deviance_list$Diversity, "
 
 ```{r deviance barplot}
 
-partial_deviance_list = read_csv("partial_deviance_list.csv")
+partial_deviance_list = read_csv("https://raw.githubusercontent.com/mhepner90/RVC/master/partial_deviance_list.csv")
 
 partial_deviance_data=subset(partial_deviance_list, Predictor!="All")
 
@@ -8796,7 +8036,7 @@ x = mean(compare$dif)
 
 #simpson diversity is on average 2 times greater than functional diversity
 
-all_matrices_data_with_subregion = read_rds("psu_matrices_data_with_subregion_rds")
+all_matrices_data_with_subregion = read_rds("https://github.com/mhepner90/RVC/blob/master/psu_matrices_data_with_subregion_rds?raw=true")
 
 matrices_subregion = all_matrices_data_with_subregion %>%
     mutate(
@@ -8905,7 +8145,7 @@ strata_shan_mean = stats_all_matrices_data %>%
 #KW assumes all of your samples come from the same type of distribution
 # if p-value is less than 0.05 than we reject the null hypothesis that there is no dfference between the means and conclude that a significant difference does exist. If p-value is >0.05 than we cannot conclude that a significant difference exists
 
-all_matrices_data = read_rds("psu_matrices_data_rds")
+all_matrices_data = read_rds("https://github.com/mhepner90/RVC/blob/master/psu_matrices_data_rds?raw=true")
 
 all_matrices_data$PROT = factor(all_matrices_data$PROT, levels=c("0","1"))
 levels(all_matrices_data$PROT)
@@ -8948,7 +8188,7 @@ kruskal.test(all_matrices_data$func.div~all_matrices_data$PROT)
 
 #### KRUSKAL TEST WITH STRATA
 
-all_matrices_data = read_rds("psu_matrices_data_rds")
+all_matrices_data = read_rds("https://github.com/mhepner90/RVC/blob/master/psu_matrices_data_rds?raw=true")
 
 all_matrices_data$STRAT = factor(all_matrices_data$STRAT, levels=c("FMLR", "FSLR", "HRRF", "OFPR", "MCPR", "INPR", "FDLR"))
 levels(all_matrices_data$STRAT)
@@ -9057,7 +8297,6 @@ cldList(P.adj~Comparison,
 
 DunnTest_all = cbind(dt_abundance_strat, dt_biomass_strat, dt_evennes_strat, dt_richnnes_strat, dt_simpson_strat, dt_shannon_strat, dt_functional_strat)
 
-write_csv(DunnTest_all, "DunnTest_all.csv")
 
 ```
 
@@ -9163,13 +8402,12 @@ cldList(P.adj ~ Comparison,
 
 DunnTest_all_subregion = cbind(dt_abundance_sr, dt_biomass_sr, dt_evenness_sr, dt_richness_sr, dt_simpson_sr, dt_shannon_sr, dt_functional_sr)
 
-write_csv(DunnTest_all_subregion, "DunnTest_all_subregion.csv")
 
 ```
 
 ```{r KW year}
 
-all_matrices_data = read_rds("psu_matrices_data_rds")
+all_matrices_data = read_rds("https://github.com/mhepner90/RVC/blob/master/psu_matrices_data_rds?raw=true")
 
 all_matrices_data$YEAR = factor(all_matrices_data$YEAR, levels=c("1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2014", "2016"))
 
@@ -9198,44 +8436,44 @@ cldList(P.adj~Comparison,
 
 ```{r lionfish}
 
-  psu_fk_abun <- read_csv("big_csv/abundance_psu/psu_fk_abun.csv",
-                          col_types = cols(protected_status = col_character()))
-  #dim(psu_fk_abun) #3,643,306 x 10
-
-  lionfish_abun = psu_fk_abun %>%
-    filter(stringr::str_detect(protected_status, 'all')) %>%
-    filter(SPECIES_CD == "PTE VOLI") %>%
-    group_by(YEAR, STRAT,PRIMARY_SAMPLE_UNIT) %>%
-    summarize(abundance_sum = sum(abundance)) %>%
-    filter(!abundance_sum == "0")
-
-  lionfish_abun_year = lionfish_abun %>%
-    group_by(YEAR) %>%
-    summarize(
-      abundance_mean = mean(abundance_sum),
-      abundance_n = length(abundance_sum),
-      abundance_sd = sd(abundance_sum),
-      abundance_se = abundance_sd / sqrt(abundance_n),
-      abundance_min = min(abundance_sum),
-      abundance_max = max(abundance_sum),
-      abundance_total = sum(abundance_sum))
-
-  lionfish = ggplot(lionfish_abun_year, aes(x = YEAR, y = abundance_total))+
-    geom_line(lwd=1) +
-    geom_point(size=3)+
-    labs(title= "Lionfish Abundance", x="Year", y="Total Abundance (number of individuals)")+
-    scale_x_continuous(limits = c(2010, 2016), breaks = c(2010, 2012, 2014, 2016), labels=c("2010","2012","2014","2016"))+
-  #scale_y_continuous(limits= c(200,1000))+
-  theme_bw()+
-  theme(
-      legend.position="none", #"none", "right",c(0.8,0.68),
-      panel.grid.major=element_blank(),
-      panel.grid.minor=element_blank(),
-      axis.title.x=element_text(size=12),
-      axis.title.y=element_text(size=12),
-      title=element_text(size=12))
-
-  ggsave(file="lionfish_abun.pdf", lionfish, width=4, height=4, path="big_csv/plots")
+#  psu_fk_abun <- read_csv("big_csv/abundance_psu/psu_fk_abun.csv",
+#                          col_types = cols(protected_status = col_character()))
+#  #dim(psu_fk_abun) #3,643,306 x 10
+#
+#  lionfish_abun = psu_fk_abun %>%
+#    filter(stringr::str_detect(protected_status, 'all')) %>%
+#    filter(SPECIES_CD == "PTE VOLI") %>%
+#    group_by(YEAR, STRAT,PRIMARY_SAMPLE_UNIT) %>%
+#    summarize(abundance_sum = sum(abundance)) %>%
+#    filter(!abundance_sum == "0")
+#
+#  lionfish_abun_year = lionfish_abun %>%
+#    group_by(YEAR) %>%
+#    summarize(
+#      abundance_mean = mean(abundance_sum),
+#      abundance_n = length(abundance_sum),
+#      abundance_sd = sd(abundance_sum),
+#      abundance_se = abundance_sd / sqrt(abundance_n),
+#      abundance_min = min(abundance_sum),
+#      abundance_max = max(abundance_sum),
+#      abundance_total = sum(abundance_sum))
+#
+#  lionfish = ggplot(lionfish_abun_year, aes(x = YEAR, y = abundance_total))+
+#    geom_line(lwd=1) +
+#    geom_point(size=3)+
+#    labs(title= "Lionfish Abundance", x="Year", y="Total Abundance (number of individuals)")+
+#    scale_x_continuous(limits = c(2010, 2016), breaks = c(2010, 2012, 2014, 2016), labels=c("2010","2012","2014","2016"))+
+#  #scale_y_continuous(limits= c(200,1000))+
+#  theme_bw()+
+#  theme(
+#      legend.position="none", #"none", "right",c(0.8,0.68),
+#      panel.grid.major=element_blank(),
+#      panel.grid.minor=element_blank(),
+#      axis.title.x=element_text(size=12),
+#      axis.title.y=element_text(size=12),
+#      title=element_text(size=12))
+#
+#  ggsave(file="lionfish_abun.pdf", lionfish, width=4, height=4, path="big_csv/plots")
 
   #psu_fk_bio <- read_csv('big_csv/biomass_psu/psu_fk_biomass.csv', col_types = cols( protected_status = col_character()))
     #dim(psu_fk_bio) 3,429,476*10
@@ -9262,7 +8500,7 @@ Hurricane disturbance in 2004 and 2005
 
 ```{r hurricane disturbance}
 
-all_matrices_data = read_rds("psu_matrices_data_rds")
+all_matrices_data = read_rds("https://github.com/mhepner90/RVC/blob/master/psu_matrices_data_rds?raw=true")
 
 hurricane = all_matrices_data[(all_matrices_data$YEAR == "2004" |
                                all_matrices_data$YEAR == "2005" |
@@ -9416,7 +8654,7 @@ cold_event2010 = cold_event %>%
 
 ```{r compare diversity indices}
 
-all_matrices_data = read_rds("psu_matrices_data_rds")
+all_matrices_data = read_rds("https://github.com/mhepner90/RVC/blob/master/psu_matrices_data_rds?raw=true")
 
 stats_all_matrices_data = all_matrices_data %>%
     group_by(YEAR) %>% #110 groups
@@ -9436,7 +8674,7 @@ percent_div_to_rich = stats_all_matrices_data %>%
   summarize(simp_rich_avg = mean(simp_rich), #0.2134
             shan_rich_avg = mean(shan_rich)) #0.3494
 
-all_matrices_data_with_subregion = read_rds("psu_matrices_data_with_subregion_rds")
+all_matrices_data_with_subregion = read_rds("https://github.com/mhepner90/RVC/blob/master/psu_matrices_data_with_subregion_rds?raw=true")
 
   matrices_strat_grouped_with_subregion = all_matrices_data_with_subregion %>%
     mutate(
@@ -9519,7 +8757,7 @@ Arc MAP with MPA's
 
 ```{r maps}
 
-all_matrices_data = read_rds("psu_matrices_data_rds")
+all_matrices_data = read_rds("https://github.com/mhepner90/RVC/blob/master/psu_matrices_data_rds?raw=true")
 
 mpa_lat_long = all_matrices_data %>%
   select(YEAR, PRIMARY_SAMPLE_UNIT, LAT_DEGREES,LON_DEGREES,MPA_NR,STRAT) %>%
@@ -9527,7 +8765,6 @@ mpa_lat_long = all_matrices_data %>%
   filter(YEAR == "2016")%>%
   arrange(MPA_NR)
 
-write_csv(mpa_lat_long, "big_csv/mpa_lat_long.csv")
 
 strata_numbered = all_matrices_data %>%
   select(YEAR, PRIMARY_SAMPLE_UNIT, LAT_DEGREES, LON_DEGREES, STRAT) %>%
@@ -9539,7 +8776,6 @@ strata_numbered = all_matrices_data %>%
                                                        ifelse(grepl("MCPR", STRAT), "6",
                                                               ifelse(grepl("OFPR", STRAT), "7","IDK"))))))))
 
-write_csv(strata_numbered, "strata_numbered.csv")
 
 
 ```
@@ -9592,50 +8828,3 @@ dev.off()
 #wordcloud(modified_thesis, scale = c(2,0.5), max.words = 100, random.order = F, rot.per=0.25, use.r.layout = F, colors=brewer.pal(8,"Dark2"))
 
 ```
-
-```{r pp examples}
-
-#2000, PSU = 211U, STRAT = HRRF
-# sum = 548.977, Protected = 1
-#Richness = 50, Simpson = 8.517275, Shannon = 14.303620, Functional diversity = 2.832026
-#Eveness = 0.5475674, 9 – 27 – 2000, 25.12288, -80.29665
-
-pp_example = all_matrices_data %>%
-  #arrange(desc(richness))
-  filter(STRAT == "HRRF") %>%
-  filter(PRIMARY_SAMPLE_UNIT == "211U")%>%
-  filter(YEAR == "2000")
-
-pp_example2 <- psu_fk_abun_no_spp %>%
-  filter(YEAR == "2000") %>%
-  filter(PRIMARY_SAMPLE_UNIT == "211U")%>%
-  filter(!abundance == "0")  %>%
-  arrange(desc(abundance))
-
-pp_example3 = left_join(pp_example2, family, by= "SPECIES_CD")%>%
-  select(SPECIES_CD, abundance, COMNAME)
-
-diversity_example = read_csv("pp_diversity_example2.csv")
-
-
-  div_example = diversity_example %>%  
-    select(SPECIES_CD,abundance) %>%
-    spread(SPECIES_CD,abundance)
-
-richness = specnumber(div_example[,]) #24
-simpson = diversity(div_example[,], index = 'simpson') #0.8653564
-shannon = (diversity(div_example[,],  index = 'shannon')) #2.413305
-simpson_en = 1/(1 - diversity(div_example[,], index = 'simpson')) #7.427017
-shannon_en = exp(diversity(div_example[,],  index = 'shannon')) #11.178
-
-#post hurricane event examples
-  div_example_post = diversity_example %>%  
-    #filter(post_abundance != "0") %>%
-    select(SPECIES_CD,post_abundance) %>%
-    spread(SPECIES_CD,post_abundance)
-
-  post_richness = specnumber(div_example_post[,]) #12
-  post_simpson = diversity(div_example_post[,], index = 'simpson') #0.8417122
-  post_shannon = (diversity(div_example_post[,],  index = 'shannon')) #2.094478
-  post_simpson_en = 1/(1 - diversity(div_example_post[,], index = 'simpson')) #6.317604
-  post_shannon_en = exp(diversity(div_example_post[,],  index = 'shannon')) #8.121199
