@@ -5,5 +5,7 @@
 
 data <- robis::occurrence("Pterois volitans", geometry = "POLYGON ((-83.15 25.65, -80.066667 25.65, -80.066667 24.3, -83.15 24.3, -83.15 25.65))")
 
-robis::leafletmap(data)
+map = robis::leafletmap(data)
+
+print(map)
 ```
