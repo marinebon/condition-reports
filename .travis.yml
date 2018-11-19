@@ -11,6 +11,7 @@ git:
   depth: 3
 before_install:
   - sudo apt-get install -y r-cran-ncdf4 libudunits2-dev libudunits2-dev libgdal-dev libgeos-dev libproj-dev
+  - pip install --upgrade pip
 before_script:
   # git setup
   - git config --global user.name "Tylar Murray (Travis-CI)"
