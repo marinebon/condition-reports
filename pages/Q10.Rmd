@@ -1,6 +1,10 @@
 # Q10: What is the integrity of major habitat types and how is it changing?
 
-We can put R chunks here.
+example iframe plot:
+
+<iframe src='https://leafletjs.com/examples/choropleth/example.html' width='816' height='516'> </iframe>
+
+We can also put R chunks here.
 Example R plot:
 
 ```{r}
