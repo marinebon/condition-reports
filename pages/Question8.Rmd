@@ -5,3 +5,16 @@ Potential data sources:
 2. Climate online link to Key West temp. records (how far back)
 3. Plots of SST over time (dashboard)
 
+test python:
+
+```{python}
+x = 42 * 2
+print(x) 
+```
+
+test python plots:
+```{python}
+import matplotlib.pyplot as plt
+plt.plot([0, 2, 1, 4])
+plt.show()
+```
