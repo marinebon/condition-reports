@@ -1,5 +1,7 @@
 # .travis.yml sets up Travis CI to build & deploy the site.
 language: r
+python:
+  - 3.5
 sudo: false
 cache:
   packages: true
@@ -11,7 +13,7 @@ git:
   depth: 3
 before_install:
   - sudo apt-get install -y r-cran-ncdf4 libudunits2-dev libudunits2-dev libgdal-dev libgeos-dev libproj-dev
-  - sudo pip install --upgrade pip
+  - pip install --upgrade pip
 before_script:
   # git setup
   - git config --global user.name "Tylar Murray (Travis-CI)"
@@ -20,7 +22,7 @@ before_script:
   - Rscript -e 'devtools::install_github("jeremiaheb/rvc")'
   - Rscript -e 'devtools::install_github("timelyportfolio/d3treeR")'
   # python libs
-  - sudo pip install -r requirements.txt
+  - pip install -r requirements.txt
 script:
   - echo === BUILD ROOT
   - Rscript -e 'rmarkdown::render_site()'
