@@ -13,7 +13,7 @@ cache:
 git:
   depth: 3
 before_install:
-  - sudo apt-get install -y r-cran-ncdf4 libudunits2-dev libudunits2-dev libgdal-dev libgeos-dev libproj-dev python3 python3-pip
+  - sudo apt-get install -y r-cran-ncdf4 libudunits2-dev libudunits2-dev libgdal-dev libgeos-dev libproj-dev python3 python3-pip python-tk
   - pip install --user virtualenv
   - virtualenv _virtenv
   - source ./_virtenv/bin/activate
