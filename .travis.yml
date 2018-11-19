@@ -26,6 +26,8 @@ before_script:
   - Rscript -e 'devtools::install_github("timelyportfolio/d3treeR")'
   # python libs
   - pip install -r requirements.txt
+  # matplotlib backend:
+  - export MPLBACKEND=nbAgg
 script:
   - echo === BUILD ROOT
   - Rscript -e 'rmarkdown::render_site()'
