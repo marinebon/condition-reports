@@ -15,7 +15,6 @@ print(x)
 test python plots:
 ```{python}
 import matplotlib.pyplot as plt
-import mpld3
 plt.plot([0, 2, 1, 4])
-mpld3.show()
+plt.show()
 ```
