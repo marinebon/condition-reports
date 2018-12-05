@@ -8,7 +8,7 @@
 ![long full url]( https://github.com/USF-IMARS/condition-reports/blob/master/assets/images/imars-logo.gif?raw=true )
 
 ## shorter local url
-![short local url]( /condition-reports/assets/images/imars-logo.gif?raw=true )
+![short local url]( condition-reports/assets/images/imars-logo.gif?raw=true )
 
 # "Dynamic" images from a data API
 ## ERDDAP
