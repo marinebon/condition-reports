@@ -4,7 +4,7 @@
 
 This repo is an IMaRS-tech group project designed to explore markdown, jekyll, Rmd, jupyter, and other technologies to help address Specific Condition Report Questions (SCRQs).
 
-Within the "pages" directory is a markdown (`.md`) file addressing each of the SCRQs sections from the 2018 CR Guidance document (pg 7). 
+Within the "pages" directory is an R-markdown (`.Rmd`) file addressing each of the SCRQs sections from the 2018 CR Guidance document (pg 7). 
 These sections (and their IMaRS developer usertag) are:
 
 * Drivers and Pressures (NONE)
@@ -13,6 +13,11 @@ These sections (and their IMaRS developer usertag) are:
 * Living Resources 
 * Maritime Archaeological Resources (NONE)
 
+Additional documents in `./examples/` highlight specific features independed of the content.
+
+Only files with the `.Rmd` extension are checked for code (`R`, `python`, `bash`) chunks and built into the website.
+Other files will be accessible via the static file server, but will not be modified by travis or jekyll.
+Files with `.Rmarkdown`, for example are so named to specifically avoid travis/jekyll because the environment may not yet be configured to handle the functionality included.
 
 ## Relevant links:
 * [2018 Condition Report Guidance](https://github.com/USF-IMARS/condition-reports/blob/master/2018-condition-report-guidance.pdf)
