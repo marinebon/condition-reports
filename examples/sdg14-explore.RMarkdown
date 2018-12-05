@@ -1,0 +1,298 @@
+---
+title: "SDG14 Experiments"
+---
+
+Based on SDG14 Explorer Experiments from @bbest in [github/marinebon/sdg14](https://github.com/marinebon/sdg14/blob/gh-pages/satellite/explore.Rmd).
+
+```{r setup, include=FALSE}
+rmd = '/mbon/sdg14/satellite/explore.Rmd'
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+```
+
+## Chl Map
+
+```{r chl map}
+library(ncdf4)
+library(lattice)
+library(raster)
+library(leaflet) # install.packages("leaflet")
+
+nc_path <- "/mbon/data_big/satellite/chlor_a/clim_9km/A20032007_chlor_a_CLIM_MO_GLOB_9km.nc"
+nc_path <- "/mbon/data_big/satellite/chlor_a/clim_27km/A20032007_chlor_a_CLIM_MO_GLOB_27km.nc"
+
+# TODO: why ben has to own? sudo chown -R ben /mbon/data_big/satellite
+
+nc <- nc_open(nc_path) # names(nc$var)
+lon <- ncvar_get(nc, "longitude")[,1]
+lat <- ncvar_get(nc, "latitude")[1,]
+
+#r = raster(nc, varname="January_chlor_a_clim") # , ext=extent(min(lon), max(lon), min(lat), max(lat)))
+r = raster(nc_path, varname="January_chlor_a_clim") # , ext=extent(min(lon), max(lon), min(lat), max(lat)))
+
+r <- flip(r, direction="y")
+r <- setExtent(r, extent(min(lon), max(lon), min(lat), max(lat)))
+crs(r) <- "+proj=longlat +datum=WGS84 +no_defs"
+#plot(r)
+#r
+
+r_l = leaflet::projectRasterForLeaflet(r)
+
+pal <- colorNumeric(
+  "Greens",  # RColorBrewer::display.brewer.all()
+  values(r), na.color = "transparent")
+
+leaflet() %>% 
+  addProviderTiles("Stamen.TonerLite") %>%
+  addRasterImage(r_l, colors = pal, opacity = 0.8, project=F) %>%
+  addLegend(pal = pal, values = values(r),
+    title = "Chl")
+```
+
+## Seascape Explorer
+
+[Seascape Visualization Preparation](https://marinebon.github.io/seascape-viz/prep.html)
+
+ftp://mkavanaugh:MBON@ftp.whoi.edu/
+
+
+```{r fetch from ftp, eval=F}
+library(RCurl)
+library(stringr)
+
+# csv
+csv_whoi  = 'technical/seascapes_whoi_ftp.csv'
+
+# ftp params
+url_pre   = 'ftp://ftp.whoi.edu'
+url_paths = list(
+  gl  = 'MBON/GLOBAL/BETA/SDG14/seascape/MODIS_3VAR_MO9k/',
+  fl  = 'MBON/GOM_FK/SMALL_MO/',
+  mb  = 'MBON/ENPAC_MB/SMALL_MO/')
+passwd    = read_lines('/mbon/data_big/satellite/.mkavanaugh_passwd_ftp_whoi_mbon')
+usrpwd    = sprintf('mkavanaugh:%s', passwd)
+
+# dir params
+dir_seascapes = '/mbon/data_big/satellite/seascapes'
+sapply(
+  sprintf('%s/%s', dir_seascapes, names(url_paths)), 
+  function(x) dir.create(x, recursive=T, showWarnings=F))
+
+# get ftp connection
+con = getCurlHandle(ftp.use.epsv=F, userpwd=usrpwd)
+
+if (!file.exists(csv_whoi)){
+
+  # get list of filenames
+  for (i in 1:length(names(url_paths))){ # i = 2
+    
+    # get file, url, local path for in ftp path
+    u_i = url_paths[i]
+    p_i = file.path(dir_seascapes, names(url_paths)[i])
+    d_i = tibble(
+      fname = getURL(
+        file.path(url_pre, u_i), curl=con, 
+        ftp.use.epsv=F, dirlistonly=T) %>% str_split('\n') %>% .[[1]]) %>%
+      filter(fname != '') %>%
+      mutate(
+        url  = file.path(url_pre, u_i, fname),
+        path = file.path(p_i, fname))
+    
+    if (i == 1){
+      d = d_i
+    } else {
+      d = bind_rows(d, d_i)
+    }
+    
+    # wait 5 seconds before next request, otherwise get 'Access denied: 530'
+    #Sys.sleep(5)
+  }
+  
+  # write csv
+  write_csv(d, csv_whoi)
+}
+
+# con = getCurlHandle(ftp.use.epsv=F, userpwd=usrpwd)
+d = read_csv(csv_whoi) %>%
+  mutate(
+    path_exists = file.exists(path)) %>%
+  filter(!path_exists)
+
+for (i in 1:nrow(d)){
+#for (i in c(178:181,496:499)){
+  cat(sprintf('%03d (of %d): fetching %s \n', i, nrow(d), d$fname[i]))
+  getBinaryURL(d$url[i], curl=con) %>%
+    writeBin(d$path[i])
+}
+```
+
+## Summarize Continuous
+
+Using chl raster from first chunk.
+
+- [plotly with uncertainty ribbon](https://plot.ly/r/graphing-multiple-chart-types/#loess-smoother-with-uncertainty-bounds)
+
+```{r continuous nc}
+library(tidyverse)
+library(stringr)
+library(sf)
+library(ncdf4)
+library(raster)
+select = dplyr::select
+
+eez_s005_shp    = '/mbon/data_big/technical/boundaries/eez_derived/eez_s005.shp'
+esp_s005_shp    = '/mbon/data_big/technical/boundaries/eez_derived/esp_s005.shp'
+
+eez_s005 = read_sf(eez_s005_shp)
+
+e_s = eez_s005 %>%
+  filter(Pol_type == '200NM') %>%
+  arrange(Area_km2) %>%
+  select(GeoName, Area_km2, Territory1, Territory2, Sovereign1, Sovereign2)
+View(e_s %>% st_set_geometry(NULL))
+
+# eez_s005 = st_read(eez_s005_shp) %>% 
+#   filter(
+#     GeoName %in% 
+#       c('El Salvador Exclusive Economic Zone','Cypriote Exclusive Economic Zone','Tunisian Exclusive Economic Zone')) %>% 
+#   as("Spatial")
+esp_s005 = read_sf(esp_s005_shp) %>% as("Spatial")
+
+#nc_path <- "/mbon/data_big/satellite/chlor_a/clim_9km/A20032007_chlor_a_CLIM_MO_GLOB_9km.nc"
+nc_path <- "/mbon/data_big/satellite/chlor_a/clim_27km/A20032007_chlor_a_CLIM_MO_GLOB_27km.nc"
+
+nc <- nc_open(nc_path) # names(nc$var)
+lon <- ncvar_get(nc, "longitude")[,1]
+lat <- ncvar_get(nc, "latitude")[1,]
+
+r_ncvar = function(var){
+  lon = ncvar_get(nc, "longitude")[,1]
+  lat = ncvar_get(nc, "latitude")[1,]
+  r = raster(nc_path, varname=var) # , ext=extent(min(lon), max(lon), min(lat), max(lat)))
+  r <- flip(r, direction="y")
+  r <- setExtent(r, extent(min(lon), max(lon), min(lat), max(lat)))
+  crs(r) <- "+proj=longlat +datum=WGS84 +no_defs"
+  r
+}
+
+env = tibble(var = names(nc$var)) %>%
+  filter(str_detect(var, '.*_clim$')) %>%
+  mutate(
+    r  = map(var, r_ncvar))
+env
+
+r_eez = function(r, eez=esp_s005){
+  #browser()
+  data_frame(
+    GeoName = eez$GeoName,
+    mean    = raster::extract(r, eez, fun=mean, na.rm=T)[,1],  
+    sd      = raster::extract(r, eez, fun=sd, na.rm=T)[,1])
+  #browser()
+  #return(v)
+}
+
+
+# stack approach
+vars = names(nc$var)
+vars = vars[str_detect(vars, '.*_clim$')]
+s = stack(sapply(vars, function(v) raster(nc_path, varname=v)))
+names(s) = vars
+#names(s) = sprintf('%02d', 1:12)
+lon = ncvar_get(nc, "longitude")[,1]
+lat = ncvar_get(nc, "latitude")[1,]
+s = flip(s, direction='y')
+s <- setExtent(s, extent(min(lon), max(lon), min(lat), max(lat)))
+crs(s) <- "+proj=longlat +datum=WGS84 +no_defs"
+#s = stack(s) # flip converts to brick & cannot extract
+plot(raster(s, vars[1]))
+
+eez_sp = eez_s005 %>% as('Spatial')
+eez_sp$GeoName[duplicated(eez_sp$GeoName)]
+plot(eez_sp['GeoName'])
+
+system.time({
+eez_mean = raster::extract(s, eez_sp, fun=mean, na.rm=T, df=T)
+eez_sd   = raster::extract(s, eez_sp, fun=sd, na.rm=T, df=T)
+})
+
+yr = round(mean(c(2003, 2007)))
+d = eez_sp@data %>%
+  select(MRGID) %>%
+  mutate(
+    ID = row_number()) %>%
+  left_join(
+    eez_mean,
+    by='ID') %>%
+  gather(month_etc, mean, -MRGID, -ID) %>% 
+  left_join(
+    eez_sd %>%
+      gather(month_etc, sd, -ID),
+    by=c('ID','month_etc')) %>%
+  mutate(
+    lwr_sd = mean - sd,
+    upr_sd = mean + sd,
+    ymd = as.Date(plyr::mapvalues(
+      month_etc,
+      sprintf('%s_chlor_a_clim', month.name),
+      sprintf('%s-%02d-15', yr, 1:12))))
+write_csv(d, sprintf('%s_eez-mean-sd.csv', tools::file_path_sans_ext(nc_path)))
+
+d = read_csv(sprintf('%s_eez-mean-sd.csv', tools::file_path_sans_ext(nc_path)))
+d = eez_sp@data %>%
+  left_join(d, by='MRGID')
+
+#View(d) # names(d)
+library(xts)
+x = d %>%
+  filter(GeoName=="Spanish Exclusive Economic Zone") %>%
+  select(ymd, mean, lwr_sd, upr_sd)
+x = xts(select(x, -ymd), order.by=x$ymd)
+
+library(dygraphs) # install.packages("dygraphs")
+
+#the axis label is passed as a date, this function outputs only the month of the date
+getMonth <- 'function(d){
+  var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  return monthNames[d.getMonth()]; }'
+
+#the x values are passed as milliseconds, turn them into a date and extract month and day
+getMonthDay <- 'function(d) {
+  var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  date = new Date(d);
+  //return monthNames[date.getMonth()] + " " +date.getUTCDate(); }
+  return monthNames[date.getMonth()]; }'
+
+dygraph(x, main = "Climatic Chlorophyll (2003 - 2007)") %>%
+  dySeries(c('lwr_sd', 'mean', 'upr_sd'), label = "Chl a") %>%
+  dyAxis("x",valueFormatter=JS(getMonthDay), axisLabelFormatter=JS(getMonth))
+
+
+# memory problems with projectRasterForLeaflet
+# tbl = tbl %>%
+#   mutate(
+#     r_l = map(r, projectRasterForLeaflet))
+
+vals = list()
+for (f in list.files(dir)){
+
+  names(nc$var)
+  
+  # continous raster: mean & sd -> timeseries line with gray border to sd envelope
+  # monthly anomolies by day of year: eg chlor_a/anom/A20021822002212_chlor_a_MO_ANOM_GLOB_9km.nc
+  vals[f] = 
+  ply_mean = extract(r, esp_s005, fun=mean, na.rm=T)
+  ply_sd   = extract(r, esp_s005, fun=sd, na.rm=T)
+  
+  # categorical raster: percent (from sum, area) -> stacked area chart
+  vals[f] = extract(r, eez_s005, fun=c(sum, area))  # na.rm=T
+  
+  # concerns: 
+  # - % cloud
+  # - area reduction towards poles
+  # - % pixel overlap w/ arbitrary poly
+}
+
+mat = 'ftp://mkavanaugh:MBON@ftp.whoi.edu/MBON/GLOBAL/BETA/SDG14/seascape/MODIS_3VAR_MO9k/GLOBE14_I90VAR3_9k_2002182.mat'
+```
+
