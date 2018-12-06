@@ -1,11 +1,12 @@
 Based on demo script [here](https://github.com/iobis/training/blob/master/odmr/script.R)
 as presented by Pieter Provoost @ Ocean Data Management for Researchers 2018
 
-```{r}
+```{r load libs}
 # requires devtools::install_github("iobis/robis", ref="obis2")
 library(ggplot2)
+```
 
-# === basic Spio filicornis example
+```{r basic Spio filicornis example}
 sf <- robis::occurrence("Spio filicornis")
 dim(sf)
 robis::map_ggplot(sf)
@@ -19,8 +20,9 @@ View(sf)
 # TODO: how to inject output of View() here?
 
 table(sf$originalScientificName)
+```
 
-# === more advanced Spio example
+```{r more advanced Spio example}
 library("magrittr")
 
 spio <- robis::occurrence("Spio")
@@ -39,14 +41,14 @@ mol <- robis::occurrence(
     geometry = "POLYGON ((2.54333 51.07247, 2.10388 51.64189, 2.79053 51.80522, 3.36731 51.36149, 2.54333 51.07247))"
 )
 robis::map_ggplot(mol)
-
-# === ggplot2 histograms
+```
+```{r ggplot2 histograms}
 ggplot2::ggplot(mol) + ggplot2::geom_bar(ggplot2::aes(date_year), width = 1)
 ggplot2::ggplot(mol) + ggplot2::geom_bar(
     ggplot2::aes(date_year, fill = class), width = 1
 ) + ggplot2::scale_fill_brewer(palette = "Spectral")
-
-# === bathymetry from marmap
+```
+```{r bathymetry from marmap}
 library(marmap)
 library(plotly)
 
@@ -68,9 +70,8 @@ plot_ly(z = ~nz, x = ~x, y = ~y) %>%
   add_surface(showscale = FALSE) %>%
   add_trace(data = ha, x = ~decimalLongitude, y = ~decimalLatitude, z = ~-minimumDepthInMeters, marker = list(color = "#ffcc00", size = 3), name = "Hoplostethus atlanticus") %>%
 add_trace(data = pc, x = ~decimalLongitude, y = ~decimalLatitude, z = ~-minimumDepthInMeters, marker = list(color = "#ff3399", size = 3), name = "Parapercis colias")
-
-
-## === export as CSV
+```
+```{r export as CSV}
 
 #write.csv(mol, file = "mollusca.csv", row.names = FALSE)
 ```
