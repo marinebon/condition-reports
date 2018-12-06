@@ -12,36 +12,32 @@ Some alternative display options are enumerated [here](https://gis.stackexchange
 
 ## Project Dir Explaination
 The expected directory structure here: (TODO: this might not be essential within these examples)
-```
-PROJECTS
-  LIBERIA - Project files for this area
-     DATA - information about datasets
-        BASEMAP
-            BORDERS - Shapes for mapping
-            RELIEF- Bathymetry and topography
-        OCEAN
-            WOD- World Ocean Database
-            WOA- World Ocean Atlas
-            [OTHER SOURCES] - Separate folders identified by acronyms are optional here depending on your preferences
-     PRODUCTS - Files created by the following main programs
-      IDV - Maps and syntheses made by Integrated Data Viewer: synthesis program for many operational datasets and some GIS objects
-      ODV - Collections and their products made with Ocean Data View; our principal ocean station data management, analysis and display tool
-          COLLECTIONS - Individual collections of data by data type, area or other original selection criteria
-          IMAGES - Saved images of graphics
 
-          INTERPOLATIONS - XYZ data triplets exported from ODV's "surface mode" analyses; could also be called grids, because they are derived from grid-like interpolation schemes
-
-          SUBSETS - Spreadsheets of data taken from larger collections, based on temporal, spatial or other station or sample criteria; can also be a completely new collection extracted from the parent collection
-
-          TIMESERIES - Data analyses based mainly on data/time, not geographic location
-
-      SAGA - Grids and vector products made by our "workhorse" public domain GIS program
-              AUXILIARY - Saved settings (properties files) for the display of shapes or grids, and other similar helper files
-              GEOIMAGES - Geo-referenced images, using either world files or KML/KMZ for positioning; includes also TIFF grid rasters (for WMS use only)
-              GRIDS - grids in Saga format, including template grids
-              PROJECTS - A special sort of file that contains lists of objects to place in one map, including the display properties of the objects
-              TABLES - tabular data from within shapes, and also created alongside them for display management
-              VECTORS - points, lines, contours, polygons, graticules, wind arrows, current arrows; all as either ESRI shapes or Google KML/KMZ
+* PROJECTS
+    * LIBERIA - Project files for this area
+        * DATA - information about datasets
+        * BASEMAP
+            * BORDERS - Shapes for mapping
+            * RELIEF- Bathymetry and topography
+        * OCEAN
+            * WOD- World Ocean Database
+            * WOA- World Ocean Atlas
+            * [OTHER SOURCES] - folders identified by acronyms (optional)
+    * PRODUCTS - Files created by the following programs:
+        * IDV - Integrated Data Viewer: synthesis program for many operational datasets and some GIS objects
+        * ODV - Ocean Data View: ocean station data management, analysis, display
+            * COLLECTIONS - data by data type, area or other original selection criteria
+            * IMAGES - Saved images of graphics
+            * INTERPOLATIONS - XYZ data triplets exported from ODV "surface mode" AKA grids b/c derived from grid-like interpolations
+            * SUBSETS - Spreadsheets from larger collections
+            * TIMESERIES - Data analyses based mainly on data/time, not geographic location
+        * SAGA - Grids and vector products made by our "workhorse" public domain GIS program
+            * AUXILIARY - Saved settings/properties files and similar helper files
+            * GEOIMAGES - Geo-referenced images, using world files or KML/KMZ for positioning; also TIFF grid rasters (for WMS only)
+            * GRIDS - grids in Saga format, including template grids
+            * PROJECTS - special files that contain lists of objects to place in one map, including display properties
+            * TABLES - tabular data from within shapes, and also created alongside them for display management
+            * VECTORS - points, lines, contours, polygons, graticules, wind arrows, current arrows; ESRI shapes or Google KML/KMZ
 
 # Data Sources:
 1. World Borders from [thematicMapping.org](http://thematicmapping.org/downloads/world_borders.php)
