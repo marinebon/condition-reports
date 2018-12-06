@@ -44,7 +44,8 @@ script:
   - cd ..
 after_success:
   - echo === PUSHING TO GITHUB
-  - git ls-files -m -o -X .gitignore | grep -v '.html' | xargs git add
+  - git ls-files -m -o -X .gitignore -x '*.html' | xargs ls -lh
+  - git ls-files -m -o -X .gitignore -x '*.html' | xargs git add
   - git commit -m "travis-ci.org Rmd render [ci skip]"
   - git push --force https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git HEAD:gh-pages
 notifications:
