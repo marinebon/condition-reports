@@ -3,13 +3,15 @@ as presented by Pieter Provoost @ Ocean Data Management for Researchers 2018
 
 ```{r load libs}
 # requires devtools::install_github("iobis/robis", ref="obis2")
+# robis2 expects these to be loaded (?):
 library(ggplot2)
+library(tidyverse)
 ```
 
 ```{r basic Spio filicornis example}
 sf <- robis::occurrence("Spio filicornis")
 dim(sf)
-robis::map_ggplot(sf)
+#robis::map_ggplot(sf)
 # TODO: how to inject output of map_leaflet() file here?
 # by default this opens in browser at
 # file:///tmp/RtmpY77nB4/viewhtml5e25d55bb8f/index.html
@@ -31,7 +33,7 @@ spio %>% dplyr::group_by(species)%>% dplyr::summarize(n(), mean(decimalLatitude)
 ggplot2::ggplot(spio) + ggplot2::geom_point(ggplot2::aes(x=decimalLongitude, y=decimalLatitude))
 
 # select one species
-spio %>% dplyr::filter(species == "Spio blakei")  %>% robis::map_ggplot()
+spio %>% dplyr::filter(species == "Spio blakei") # %>% robis::map_ggplot()
 
 # === spatial query
 # wkt geometry string creation tool: http://iobis.org/maptool/
@@ -40,7 +42,7 @@ mol <- robis::occurrence(
     "Mollusca",
     geometry = "POLYGON ((2.54333 51.07247, 2.10388 51.64189, 2.79053 51.80522, 3.36731 51.36149, 2.54333 51.07247))"
 )
-robis::map_ggplot(mol)
+#robis::map_ggplot(mol)
 ```
 ```{r ggplot2 histograms}
 ggplot2::ggplot(mol) + ggplot2::geom_bar(ggplot2::aes(date_year), width = 1)
