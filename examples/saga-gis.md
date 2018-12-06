@@ -58,7 +58,6 @@ TODO: must download data first (or load from remote within python)
 ```{python}
 #!/usr/bin/env python
 import subprocess
-import mapnik
 import os.path
 
 
@@ -67,7 +66,7 @@ class input_file(object):
     WORLD_EEZ_LINE = "DATA/BASEMAP/BORDERS/eez/eez_boundaries_v10.shp"
 
     LIBERIA_FRAME_POLY = "PRODUCTS/SAGA/VECTORS/frame_liberia_poly.shp"
-    
+
     LIBERIA_FRAME_LINE = "PRODUCTS/SAGA/VECTORS/frame_liberia_line.shp"
     @staticmethod
     def list_all():
@@ -93,28 +92,13 @@ cmd = [
 print("running bash command:\n\t{}".format(subprocess.list2cmdline(cmd)))
 subprocess.check_output(cmd)
 
-m = mapnik.Map(600, 300)
-m.background = mapnik.Color('steelblue')
-s = mapnik.Style()
-r = mapnik.Rule()
-# polygon_symbolizer = mapnik.PolygonSymbolizer()
-# polygon_symbolizer.fill = mapnik.Color('#f2eff9')
-# r.symbols.append(polygon_symbolizer)
-
-line_symbolizer = mapnik.LineSymbolizer()
-line_symbolizer.stroke = mapnik.Color('rgb(100%,100%,100%)')
-line_symbolizer.stroke_width = 3.0
-r.symbols.append(line_symbolizer)
-s.rules.append(r)
-m.append_style('My Style', s)
-ds = mapnik.Shapefile(file=LIBERIA_EEZ_LINE)
-layer = mapnik.Layer('world')
-layer.datasource = ds
-layer.styles.append('My Style')
-m.layers.append(layer)
-m.zoom_all()
-# TODO: show here rather than save to file:
-# mapnik.render_to_file(m, 'world.png', 'png')
+# TODO: how to plot?
+# === 1 use mapnik_plot like:
+# from assets.py.mapnik_plot import mapnik_plot
+# mapnik_plot(LIBERIA_EEZ_LINE)
+#
+# === 2 use [gdal_rasterize](https://www.gdal.org/gdal_rasterize.html) bash cmd
+# ```{bash} gdal_rasterize ...???... ```
 ```
 
 # TODO:
@@ -122,4 +106,3 @@ m.zoom_all()
 2. play with [saga-py](https://github.com/radical-cybertools/saga-python)
 3. use more of chl_a anom [@gmis](http://mcc.jrc.ec.europa.eu/emis/)
 4. can skip over saving intermediate products in python by using data in RAM (see [here](https://sourceforge.net/p/saga-gis/wiki/Creating%20Python%20scripts/)).
-
