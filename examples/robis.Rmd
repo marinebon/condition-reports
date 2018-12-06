@@ -18,7 +18,7 @@ dim(sf)
 
 str(sf)
 names(sf)
-View(sf)
+#View(sf)
 # TODO: how to inject output of View() here?
 
 table(sf$originalScientificName)
