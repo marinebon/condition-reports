@@ -104,7 +104,7 @@ def parse_geom(string):
 geoms = pd.DataFrame(data_raw['geom'].map(parse_geom).values.tolist(), columns=['chuck',sample_lon,sample_lat]).convert_objects(convert_numeric=True)
 ```
 
-```{pytho merge selections}
+```{python merge selections}
 data_raw = data_raw.merge(geoms, left_index=True, right_index=True)
 ```
 
