@@ -6,6 +6,5 @@ seaborn
 tqdm
 urllib3>=1.13.1
 netCDF4
-json
 sklearn
 folium
