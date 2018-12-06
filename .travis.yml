@@ -34,10 +34,14 @@ script:
   - Rscript -e 'rmarkdown::render_site()'
   - echo === BUILD PAGES DIR
   - cp _site.yml pages/_site.yml
-  - Rscript -e 'rmarkdown::render_site("pages")'
+  - cd pages
+  - Rscript -e 'rmarkdown::render_site()'
+  - cd ..
   - echo === BUILD EXAMPLES DIR
   - cp _site.yml examples/_site.yml
+  - cd examples
   - Rscript -e 'rmarkdown::render_site("examples")'
+  - cd ..
 after_success:
   - echo === PUSHING TO GITHUB
   - git ls-files -m -o -X .gitignore | grep -v '.html' | xargs git add
