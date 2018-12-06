@@ -53,6 +53,7 @@ ggplot2::ggplot(mol) + ggplot2::geom_bar(
 ```{r bathymetry from marmap}
 library(marmap)
 library(plotly)
+library(robis)
 
 res <- 0.2
 xmin <- 158
