@@ -33,7 +33,7 @@ spio %>% dplyr::group_by(species)%>% dplyr::summarize(n(), mean(decimalLatitude)
 ggplot2::ggplot(spio) + ggplot2::geom_point(ggplot2::aes(x=decimalLongitude, y=decimalLatitude))
 
 # select one species
-spio %>% dplyr::filter(species == "Spio blakei") # %>% robis::map_ggplot()
+#spio %>% dplyr::filter(species == "Spio blakei") %>% robis::map_ggplot()
 
 # === spatial query
 # wkt geometry string creation tool: http://iobis.org/maptool/
