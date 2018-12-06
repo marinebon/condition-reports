@@ -24,6 +24,7 @@ before_script:
   # r python libs
   - Rscript -e 'devtools::install_github("jeremiaheb/rvc")'
   - Rscript -e 'devtools::install_github("timelyportfolio/d3treeR")'
+  - Rscript -e 'devtools::install_github("iobis/robis", ref="obis2")'
   # python libs
   - pip install -r requirements.txt
   # matplotlib backend:
