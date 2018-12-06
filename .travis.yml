@@ -40,7 +40,7 @@ script:
   - echo === BUILD EXAMPLES DIR
   - cp _site.yml examples/_site.yml
   - cd examples
-  - Rscript -e 'rmarkdown::render_site("examples")'
+  - Rscript -e 'rmarkdown::render_site()'
   - cd ..
 after_success:
   - echo === PUSHING TO GITHUB
