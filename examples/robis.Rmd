@@ -3,6 +3,7 @@ as presented by Pieter Provoost @ Ocean Data Management for Researchers 2018
 
 ```{r}
 # requires devtools::install_github("iobis/robis", ref="obis2")
+library(ggplot2)
 
 # === basic Spio filicornis example
 sf <- robis::occurrence("Spio filicornis")
