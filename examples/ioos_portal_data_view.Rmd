@@ -20,7 +20,7 @@ Outputs are plots shown on the screen.
 
 ```{python do imports}
 # import libraries
-%matplotlib inline
+# %matplotlib inline  # not needed b/c `export MPLBACKEND=agg`
 from IPython.core.display import display
 import numpy as np
 import pandas as pd
