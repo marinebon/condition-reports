@@ -1,11 +1,13 @@
 Chunk taken from [infographiq plotter](https://github.com/marinebon/infographiq/blob/master/R/plot.R)
-```{r}
+
+```{r library loads}
 library(tidyverse)
 library(dygraphs) # devtools::install_github("rstudio/dygraphs")
 library(xts)
 library(lubridate)
 library(futile.logger)
-
+```
+```{r set constants}
 csv_tv = "http://oceanview.pfeg.noaa.gov/erddap/tabledap/cciea_MM_pup_count.csv?time,mean_growth_rate"
 title = "cciea_pup_count"
 y_label = "mean growth rate"
@@ -18,11 +20,13 @@ skip    = 0
 use_kmb = T
 group_by= NULL
 std_err= NULL
+```
 
-
-
+```{r get data}
 d = read_csv(csv_tv)
+```
 
+```{r data munging}
 if(!is.null(col_t)){
   d_s = d[,c(col_t, col_y)] # d_subset
 }
@@ -32,7 +36,8 @@ colnames(d_s) = c('t','v')
 if (all(nchar(as.character(d_s$t))==4)){
     d_s$t = as.Date(sprintf('%d-01-01', d_s$t))
 }
-
+```
+```{r summarize data}
 m = d_s %>%
     summarize(
       mean    = mean(v),
@@ -44,7 +49,8 @@ m = d_s %>%
       sd_lo   = mean(v)-sd,
       ci95_hi = mean(v)+2*se,
       ci95_lo = mean(v)-2*se)
-
+```
+```{r create dygraph plot}
 y_arg = "v"
 
 d_s %>%
