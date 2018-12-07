@@ -1,5 +1,6 @@
 ## Technologies
 ### R
+* [R + Rmd basics](./rmd_basics)
 * [ggplot2](r_ggplot2)
 * infographiq infographics:
     * [embed (iframe) an infographic](./infographiq_embed)
