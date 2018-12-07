@@ -1,8 +1,16 @@
 # Q14: What is the status of non-indigenous species and how is it changing?
 
+## Notable Invasive Species
+### Lionfish
+Although beautiful, the invasive lionfish (*Pterois volitans*) poses a major threat to FKNMS
+native wildlife.
 
-```{r}
+![lionfish photo](https://upload.wikimedia.org/wikipedia/commons/b/bf/Pterois_volitans_Manado-e_edit.jpg)
 
+The lionfish is spread throughout the FK as shown by the following map of
+*Pterois volitans* occurrence records in OBIS:
+
+```{r map lionfish}
 data <- robis::occurrence("Pterois volitans", geometry = "POLYGON ((-83.15 25.65, -80.066667 25.65, -80.066667 24.3, -83.15 24.3, -83.15 25.65))")
 
 # for robis v1:
@@ -10,4 +18,11 @@ data <- robis::occurrence("Pterois volitans", geometry = "POLYGON ((-83.15 25.65
 
 # for robis v2:
 robis::map_leaflet(data)
+```
+
+The rate of occurrences in the FK is a very recent development.
+The following timeseries of occurrences in OBIS shows just how quickly the lionfish has spread.
+
+```{r lionfish timeseries}
+ggplot2::ggplot(data) + ggplot2::geom_bar(ggplot2::aes(date_year), width = 1)
 ```
