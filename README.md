@@ -4,9 +4,12 @@
 [![Build
 Status](https://travis-ci.org/marinebon/condition-reports.svg?branch=master)](https://travis-ci.org/marinebon/condition-reports)
 
-This repo is an IMaRS-tech group project designed to explore markdown,
-jekyll, Rmd, jupyter, and other technologies to help address Specific
-Condition Report Questions (SCRQs).
+This repo is an experiment designed to explore markdown,
+jekyll, Rmd, jupyter, travis, and other technologies to 
+produce continuously up-to-date reports like those of the
+NMS Specific Condition Report Questions (SCRQs).
+
+To get started look first in `./examples`.
 
 Within the “pages” directory is an R-markdown (`.Rmd`) file addressing
 each of the SCRQs sections from the 2018 CR Guidance document (pg 7).
