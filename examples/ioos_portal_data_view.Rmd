@@ -130,7 +130,7 @@ HeatMap(heat_data, radius=7, blur=1).add_to(location_map)
 location_map.add_child(folium.LatLngPopup())
 
 #display(location_map)
-location_map._repr_html_()
+print(location_map._repr_html_())
 ```
 
 # Calculate Indices for Sample Data
