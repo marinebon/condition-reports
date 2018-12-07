@@ -43,10 +43,10 @@ script:
   - Rscript -e 'rmarkdown::render_site()'
   - cd ..
   - echo === BUILD EXAMPLES OTGA
-  - cp _site.yml otga/_site.yml
-  - cd otga
+  - cp _site.yml examples/otga/_site.yml
+  - cd examples/otga
   - Rscript -e 'rmarkdown::render_site()'
-  - cd ..
+  - cd ../..
 after_success:
   - echo === PUSHING TO GITHUB
   # - git ls-files -m -o -X .gitignore -x '*.html' | xargs ls -lh
