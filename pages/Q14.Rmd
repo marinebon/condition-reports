@@ -26,3 +26,6 @@ The following timeseries of occurrences in OBIS shows just how quickly the lionf
 ```{r lionfish timeseries}
 ggplot2::ggplot(data) + ggplot2::geom_bar(ggplot2::aes(date_year), width = 1)
 ```
+
+As of 2018-12, the OBIS data on this area is sparse, with all (or almost all?)
+data coming from the Reef Visual Census (RVC) program. 
