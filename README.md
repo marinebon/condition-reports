@@ -9,7 +9,11 @@ jekyll, Rmd, jupyter, travis, and other technologies to
 produce continuously up-to-date reports like those of the
 NMS Specific Condition Report Questions (SCRQs).
 
-To get started look first in `./examples`.
+----------------------------------
+
+To get started look first in `./examples` and compare the files there to the corresponding outputs on the website in [marinebon.github.io/condition-reports/examples](https://marinebon.github.io/condition-reports/examples).
+
+----------------------------------
 
 Within the “pages” directory is an R-markdown (`.Rmd`) file addressing
 each of the SCRQs sections from the 2018 CR Guidance document (pg 7).
