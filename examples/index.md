@@ -1,10 +1,12 @@
 ## Technologies
 ### R
 * [ggplot2](r_ggplot2)
-* (TODO) infographiq infographics: [infographiq_plot](./infographiq_plot)
+* (TODO) infographiq infographics:
+    * [embed (iframe) an infographic](./infographiq_embed)
+    * [infographiq_plot](./infographiq_plot)
 
 ### python
-* (TODO) jupyter : [ioos_portal_data_view](./ioos_portal_data_view)
+* jupyter : [ioos_portal_data_view](./ioos_portal_data_view)
 
 ### others
 * [images](./iframe)
