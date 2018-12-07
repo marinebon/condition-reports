@@ -6,3 +6,8 @@ This is my demo file!
 * [r-obis](../robis)
 * [Ocean Data View](../odv)
 * [FKNMS Invasive Species (Lionfish) demo](../../pages/Q14)
+
+```{r}
+x = 1 + 1
+print(x)
+```
