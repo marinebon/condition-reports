@@ -9,6 +9,8 @@ jekyll, Rmd, jupyter, travis, and other technologies to
 produce continuously up-to-date reports like those of the
 NMS Specific Condition Report Questions (SCRQs).
 
+Although unrelated examples may be included, the regional focus of this particular repo is on the Florida Key National Marine Sanctuary.
+
 A similar experiment is ongoing for the Channel Islands over at [ioos-eco/cinms-cr](https://github.com/ioos-eco/cinms-cr).
 
 ----------------------------------
