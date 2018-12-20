@@ -9,6 +9,8 @@ jekyll, Rmd, jupyter, travis, and other technologies to
 produce continuously up-to-date reports like those of the
 NMS Specific Condition Report Questions (SCRQs).
 
+A similar experiment is ongoing for the Channel Islands over at [ioos-eco/cinms-cr](https://github.com/ioos-eco/cinms-cr).
+
 ----------------------------------
 
 To get started look first in `./examples` and compare the files there to the corresponding outputs on the website in [marinebon.github.io/condition-reports/examples](https://marinebon.github.io/condition-reports/examples).
