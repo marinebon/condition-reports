@@ -2,12 +2,6 @@
 This is my demo file!
 
 ### See also
-<<<<<<< HEAD
-* [SAGA GIS](examples/saga-gis)
-* [r-obis](examples/robis)
-* [Ocean Data View](examples/odv)
-* [FKNMS Invasive Species (Lionfish) demo](pages/Q14)
-=======
 * [SAGA GIS](../saga-gis)
 * [r-obis](../robis)
 * [Ocean Data View](../odv)
@@ -17,4 +11,3 @@ This is my demo file!
 x = 1 + 1
 print(x)
 ```
->>>>>>> eb48173cc7462fe9df4e81b9d95161d4908a3d9a
