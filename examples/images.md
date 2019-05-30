@@ -1,3 +1,7 @@
+NOTE: to embed an image, it **must** first be hosted somewhere.
+URLs to externally hosted images can be used, but images can also be added to github directly.
+For these examples the image has been uploaded in this repository's [assets/images](https://github.com/marinebon/condition-reports/tree/master/assets/images) directory.
+
 # images in html
 
 <img src="https://github.com/USF-IMARS/condition-reports/blob/master/assets/images/imars-logo.gif?raw=true">
