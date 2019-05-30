@@ -21,4 +21,4 @@ For these examples the image has been uploaded in this repository's [assets/imag
 
 1. browser requests a URL (using RESTful API )
 2. ERDDAP server makes the png & sends it
-3. browser displays same as static image
+3. browser displays in the same way as a static image (image only updates on page refresh)
