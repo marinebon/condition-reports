@@ -1,0 +1,14 @@
+# _site.yml configures rmarkdown:render_site behavior
+# which converts .Rmd files to .md
+name: Webinized Condition Report
+output_dir: "."
+include: ["*.Rmd"]
+exclude: ["*.txt", "*.csv", "*.pdf", "*.docx"]
+output: github_document
+# navbar:
+#   title: "My Website"
+#   left:
+#     - text: "Home"
+#       href: index.html
+#     - text: "About"
+#       href: about.html
