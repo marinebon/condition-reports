@@ -8,6 +8,7 @@ This repo is an experiment designed to explore markdown,
 jekyll, Rmd, jupyter, travis, and other technologies to 
 produce continuously up-to-date reports like those of the
 NMS Specific Condition Report Questions (SCRQs).
+Details on the CR questions can be found [here](https://sanctuaries.noaa.gov/science/condition/rating.html).
 
 Although unrelated examples may be included, the regional focus of this particular repo is on the Florida Key National Marine Sanctuary.
 
